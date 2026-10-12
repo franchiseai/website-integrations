@@ -14,7 +14,7 @@ import type {
 type Props = {
   state: QualificationState;
   actions: QualificationController;
-  design: 'table' | 'pulse';
+  design: 'table' | 'pulse' | 'outpost';
 };
 
 // This file belongs to the example website. The integration supplies no markup.

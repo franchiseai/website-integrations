@@ -51,7 +51,8 @@ execFileSync(
   { stdio: 'inherit' }
 );
 execFileSync(cli('vitepress'), ['build', 'site'], { stdio: 'inherit' });
-for (const guide of guides) await writeFile(`docs/${guide.slug}.md`, guide.markdown);
+for (const guide of guides)
+  await writeFile(`docs/${guide.slug}.md`, guide.markdown);
 const output = await readdir('docs');
 for (const required of [
   'index.html',

@@ -53,13 +53,13 @@ TypeScript describes the complete `QualificationState` and action surface. Durin
 
 `onEvent` supplies lifecycle names and page/node IDs. Use it for consent-aware measurement or a local event timeline. It supplies no answers or contact details; an event handler throwing cannot block submission. There is no automatic Google/Meta conversion delivery.
 
-The hosted playground has design/scenario selectors and a reset button. Those are demo controls, not production UI and not a requirement for agency sites.
+The hosted playground has three design choices, scenario selectors and a reset button. Outpost adds map-prefilled answers and a dismissible qualification dialog; Common Table and Pulse embed the form inline. Changing designs preserves the current controller state. Those are demo controls, not production UI and not a requirement for agency sites.
 
 ## Validate a custom design
 
 Verify blank/invalid fields, both outcomes, returning visitors, save/progress/load retries, rapid double clicks, back navigation, email locking, unchecked SMS consent, and mobile layout. Preserve labels, legends, error associations, focus management and pending states. Keep consent beside the relevant phone field.
 
-The example repository includes Playwright tests for the two presentations. Run from its root after installing dependencies:
+The example repository includes Playwright tests for the three presentations. Run from its root after installing dependencies:
 
 ```sh
 npm --prefix examples/playground install

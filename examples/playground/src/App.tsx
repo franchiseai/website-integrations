@@ -10,8 +10,9 @@ import {
 } from '@franchiseai/website-integrations/demo';
 import type { DemoScenario } from '@franchiseai/website-integrations/demo';
 import { QualificationForm } from './QualificationForm';
+import { OutpostExperience } from './OutpostExperience';
 
-type Design = 'table' | 'pulse';
+type Design = 'table' | 'pulse' | 'outpost';
 
 function TableStory() {
   return (
@@ -167,6 +168,12 @@ function Studio({
           >
             02 Pulse
           </button>
+          <button
+            aria-pressed={design === 'outpost'}
+            onClick={() => setDesign('outpost')}
+          >
+            03 Outpost
+          </button>
         </div>
         <div className="studio-settings">
           <label htmlFor="scenario">Scenario</label>
@@ -217,6 +224,8 @@ function Experience({
     })
   );
   const { state, actions } = useQualification(controller);
+  if (design === 'outpost')
+    return <OutpostExperience state={state} actions={actions} />;
   return (
     <div className={`website ${design}`}>
       <header className="site-header">

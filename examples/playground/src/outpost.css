@@ -1,0 +1,522 @@
+.outpost {
+  --accent: #294f40;
+  --ink: #243e33;
+  --muted: #66756b;
+  --line: #d1d9ca;
+  --field: #fbfcf7;
+  background: #102c2c;
+  color: #f4f4df;
+  min-height: calc(100vh - 68px);
+  font-family: Arial, sans-serif;
+}
+.outpost-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 4%;
+  border-bottom: 1px solid #ffffff20;
+}
+.outpost-logo {
+  font-weight: 900;
+  font-size: 27px;
+  letter-spacing: -1.5px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.outpost-logo > span {
+  font-size: 37px;
+  color: #d6efaf;
+}
+.outpost-logo sup {
+  font-size: 10px;
+  align-self: flex-start;
+  margin-top: 6px;
+}
+.outpost-header-note {
+  font: 10px monospace;
+  color: #a3b8ab;
+  letter-spacing: 1px;
+}
+.outpost-header-action {
+  border: 0;
+  background: transparent;
+  color: #e4efdc;
+  font-size: 12px;
+  padding: 12px 0;
+}
+.outpost-header-action span {
+  padding-left: 18px;
+}
+.outpost-main {
+  max-width: 1440px;
+  margin: auto;
+  padding: 48px 4% 12px;
+}
+.outpost-intro {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  align-items: flex-end;
+  margin-bottom: 34px;
+}
+.outpost-label {
+  font: 10px monospace;
+  letter-spacing: 1.2px;
+  margin: 0 0 16px;
+}
+.outpost-signal {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e9a172;
+  margin-right: 8px;
+}
+.outpost-intro h1 {
+  font:
+    normal clamp(40px, 4.7vw, 68px) / 1.04 Georgia,
+    serif;
+  letter-spacing: -2px;
+  margin: 0;
+}
+.outpost-intro h1 em {
+  color: #d6efaf;
+  font-weight: normal;
+}
+.outpost-intro > p {
+  font-size: 12px;
+  line-height: 1.9;
+  color: #a9bdb2;
+  margin: 0 0 5px;
+}
+.outpost-intro strong {
+  color: #edf0df;
+  font-weight: normal;
+}
+.outpost-map {
+  height: 400px;
+  background: #e2e9d8;
+  position: relative;
+  overflow: hidden;
+  color: #294f40;
+  border-radius: 5px 5px 0 0;
+}
+.outpost-contours {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.outpost-map-caption {
+  position: absolute;
+  top: 26px;
+  left: 28px;
+  display: grid;
+  gap: 8px;
+  font: 10px monospace;
+  letter-spacing: 1px;
+}
+.outpost-map-caption small {
+  font-size: 8px;
+  color: #61745d;
+}
+.outpost-compass {
+  position: absolute;
+  top: 18px;
+  right: 30px;
+  display: grid;
+  justify-items: center;
+  font:
+    38px Georgia,
+    serif;
+}
+.outpost-compass span {
+  font: 10px monospace;
+}
+.outpost-pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  border: 0;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #173b30;
+  text-align: left;
+}
+.outpost-pin-dot {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #173b30;
+  color: #f5f7dd;
+  width: 34px;
+  height: 34px;
+  font-size: 20px;
+  box-shadow: 0 0 0 7px #294f4016;
+  transition:
+    transform 0.15s,
+    background 0.15s;
+}
+.outpost-pin[aria-pressed='true'] .outpost-pin-dot {
+  background: #ef8d56;
+  color: #1d312a;
+  box-shadow: 0 0 0 8px #ef8d5633;
+}
+.outpost-pin:hover:not(:disabled) .outpost-pin-dot {
+  transform: scale(1.15);
+}
+.outpost-pin-label {
+  display: grid;
+  gap: 4px;
+  background: #f4f5e8;
+  padding: 9px 13px;
+  border: 1px solid #c8d4be;
+  border-radius: 2px;
+  font:
+    19px Georgia,
+    serif;
+  box-shadow: 0 3px 10px #1233210a;
+}
+.outpost-pin-label small {
+  font: 8px monospace;
+  letter-spacing: 1px;
+  color: #6f806a;
+}
+.outpost-pin:disabled {
+  opacity: 1;
+  cursor: default;
+}
+.outpost-map-key {
+  position: absolute;
+  bottom: 22px;
+  left: 28px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font: 8px monospace;
+  letter-spacing: 0.6px;
+}
+.outpost-map-key > span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #294f40;
+}
+.outpost-map-key > i {
+  width: 24px;
+  border-top: 1px dashed #294f40;
+  margin-left: 12px;
+}
+.outpost-map-scale {
+  position: absolute;
+  bottom: 22px;
+  right: 28px;
+  font: 8px monospace;
+}
+.outpost-brief {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: #f3f4e8;
+  color: #243e33;
+  padding: 26px 30px;
+  border-radius: 0 0 5px 5px;
+}
+.outpost-brief-index {
+  font:
+    italic 54px Georgia,
+    serif;
+  color: #acbda0;
+  border-right: 1px solid #d1d9ca;
+  padding-right: 24px;
+}
+.outpost-brief-location {
+  flex: 1;
+}
+.outpost-brief-location .outpost-label {
+  font-size: 8px;
+  color: #73836b;
+  margin-bottom: 7px;
+}
+.outpost-brief h2 {
+  font:
+    normal 27px Georgia,
+    serif;
+  margin: 0 0 5px;
+}
+.outpost-brief-location > p:last-child {
+  font-size: 11px;
+  margin: 0;
+  color: #6d7b64;
+}
+.outpost-brief-meta {
+  padding: 0 18px;
+}
+.outpost-brief-meta > span {
+  font: 8px monospace;
+  letter-spacing: 1px;
+}
+.outpost-brief-meta > p {
+  font:
+    italic 18px/1.4 Georgia,
+    serif;
+  margin: 9px 0 0;
+}
+.outpost-start {
+  background: #ef8d56;
+  border: 0;
+  padding: 20px 22px;
+  border-radius: 2px;
+  color: #213b31;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  font-weight: 600;
+}
+.outpost-start > span {
+  font-size: 22px;
+}
+.outpost-map-disclaimer {
+  font: 9px/1.6 monospace;
+  color: #9caf9f;
+  margin: 12px 0 0;
+}
+.outpost-footer {
+  padding: 26px 4%;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  color: #a3b8ab;
+  font: 9px/1.6 monospace;
+}
+.outpost-dialog {
+  padding: 0;
+  border: 1px solid #c8d4be;
+  border-radius: 8px;
+  background: #f3f4e8;
+  color: var(--ink);
+  width: min(960px, calc(100vw - 40px));
+  max-height: calc(100dvh - 40px);
+}
+.outpost-dialog::backdrop {
+  background: #061c1dcc;
+  backdrop-filter: blur(7px);
+}
+.outpost-dialog-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f3f4e8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  border-bottom: 1px solid #d1d9ca;
+  padding: 12px 24px;
+  font: 10px monospace;
+  letter-spacing: 1px;
+}
+.outpost-dialog-bar > button {
+  border: 1px solid #d1d9ca;
+  border-radius: 50%;
+  background: transparent;
+  color: #294f40;
+  width: 36px;
+  height: 36px;
+}
+.outpost-dialog-content {
+  display: grid;
+  grid-template-columns: 0.7fr 1fr;
+}
+.outpost-dialog-aside {
+  background: #dae5cb;
+  padding: 44px 32px;
+  display: flex;
+  flex-direction: column;
+}
+.outpost-dialog-aside > span {
+  font-size: 70px;
+  line-height: 1;
+}
+.outpost-dialog-aside h2 {
+  font:
+    normal 35px/1.12 Georgia,
+    serif;
+  letter-spacing: -1px;
+  margin: 28px 0 20px;
+}
+.outpost-dialog-aside > p {
+  font:
+    italic 20px/1.6 Georgia,
+    serif;
+  color: #52674e;
+}
+.outpost-dialog-stamp {
+  margin-top: auto;
+  padding-top: 50px;
+  font:
+    22px Georgia,
+    serif;
+}
+.outpost-dialog-stamp small {
+  display: block;
+  border-top: 1px solid #abbca0;
+  margin-top: 16px;
+  padding-top: 12px;
+  font: 8px monospace;
+  letter-spacing: 1px;
+}
+.outpost .qualification-form {
+  padding: 32px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.outpost .qualification-form h2 {
+  font:
+    normal 32px/1.2 Georgia,
+    serif;
+  letter-spacing: -1px;
+}
+.outpost .form-intro {
+  font-size: 12px;
+}
+.outpost .progress-track {
+  height: 2px;
+}
+.outpost .question .choice {
+  flex-basis: 100%;
+  justify-content: space-between;
+  padding: 14px 16px;
+  font-size: 12px;
+}
+.outpost .choice-mark {
+  display: block;
+}
+.outpost .choice.selected {
+  background: #dce8cd;
+  border-color: #6c855d;
+}
+.outpost .primary-action {
+  border-radius: 2px;
+}
+.outpost .status-content {
+  min-height: 350px;
+}
+@media (max-width: 1100px) {
+  .studio-toolbar {
+    flex-wrap: wrap;
+  }
+  .studio-settings {
+    margin-left: auto;
+  }
+  .outpost-brief-meta {
+    display: none;
+  }
+}
+@media (max-width: 700px) {
+  .outpost-header {
+    padding: 18px 5%;
+  }
+  .outpost-header-note {
+    display: none;
+  }
+  .outpost-logo {
+    font-size: 22px;
+  }
+  .outpost-main {
+    padding: 30px 5% 8px;
+  }
+  .outpost-intro {
+    display: block;
+  }
+  .outpost-intro > p {
+    margin-top: 20px;
+  }
+  .outpost-intro h1 {
+    font-size: 42px;
+  }
+  .outpost-map {
+    height: 385px;
+  }
+  .outpost-map-caption {
+    left: 18px;
+    top: 20px;
+    font-size: 8px;
+  }
+  .outpost-map-caption small {
+    font-size: 7px;
+  }
+  .outpost-compass {
+    right: 16px;
+  }
+  .outpost-pin {
+    flex-direction: column;
+    gap: 8px;
+    padding: 6px;
+  }
+  .outpost-pin-label {
+    font-size: 16px;
+    padding: 8px;
+  }
+  .outpost-map-key {
+    left: 16px;
+    font-size: 6px;
+    gap: 5px;
+  }
+  .outpost-map-scale {
+    display: none;
+  }
+  .outpost-brief {
+    flex-wrap: wrap;
+    padding: 22px 18px;
+    gap: 18px;
+  }
+  .outpost-brief-index {
+    font-size: 38px;
+    padding-right: 16px;
+  }
+  .outpost-brief h2 {
+    font-size: 23px;
+  }
+  .outpost-start {
+    width: 100%;
+    justify-content: space-between;
+    padding: 16px;
+  }
+  .outpost-footer {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .outpost-dialog {
+    width: calc(100vw - 20px);
+    max-height: calc(100dvh - 20px);
+  }
+  .outpost-dialog-content {
+    display: block;
+  }
+  .outpost-dialog-aside {
+    display: none;
+  }
+  .outpost .qualification-form {
+    padding: 24px 20px;
+  }
+  .outpost-dialog-bar {
+    padding: 10px 16px;
+    font-size: 9px;
+  }
+  .design-switch {
+    max-width: 100%;
+  }
+  .design-switch button {
+    padding: 9px 10px;
+    font-size: 11px;
+  }
+}

@@ -15,7 +15,7 @@ npm install @franchiseai/website-integrations react@^19 react-dom@^19
 
 ## Start with a complete example
 
-The [playground source](https://github.com/franchiseai/website-integrations/tree/main/examples/playground) contains a runnable Vite app and two designs. Its `QualificationForm.tsx` renders every phase, current question type, validation errors, keyboard controls, consent and outcomes. Copy it into your site as a starting point, or replace all its markup. No presentation components come from the integration package.
+The [playground source](https://github.com/franchiseai/website-integrations/tree/main/examples/playground) contains a runnable Vite app and three designs. Its `QualificationForm.tsx` renders every phase, current question type, validation errors, keyboard controls, consent and outcomes. Copy it into your site as a starting point, or replace all its markup. No presentation components come from the integration package.
 
 After copying `QualificationForm.tsx` into your project, this wrapper is complete:
 
@@ -39,7 +39,7 @@ export function FranchiseEnquiry() {
 }
 ```
 
-Copy relevant example styles or apply your own CSS. The `design` prop belongs only to this example renderer, not to the package API. The two example themes use a parent `site-table` or `site-pulse` class; inspect `App.tsx` for their surrounding layout.
+Copy relevant example styles or apply your own CSS. The `design` prop belongs only to this example renderer, not to the package API. The example themes use a parent `table`, `pulse` or `outpost` class; inspect `App.tsx` and `OutpostExperience.tsx` for their surrounding layouts. Outpost demonstrates an external map selection feeding `actions.setAnswer()` and a native dialog that preserves the controller when closed.
 
 ## Compose from scratch
 
@@ -191,13 +191,13 @@ TypeScript describes the complete `QualificationState` and action surface. Durin
 
 `onEvent` supplies lifecycle names and page/node IDs. Use it for consent-aware measurement or a local event timeline. It supplies no answers or contact details; an event handler throwing cannot block submission. There is no automatic Google/Meta conversion delivery.
 
-The hosted playground has design/scenario selectors and a reset button. Those are demo controls, not production UI and not a requirement for agency sites.
+The hosted playground has three design choices, scenario selectors and a reset button. Outpost adds map-prefilled answers and a dismissible qualification dialog; Common Table and Pulse embed the form inline. Changing designs preserves the current controller state. Those are demo controls, not production UI and not a requirement for agency sites.
 
 ## Validate a custom design
 
 Verify blank/invalid fields, both outcomes, returning visitors, save/progress/load retries, rapid double clicks, back navigation, email locking, unchecked SMS consent, and mobile layout. Preserve labels, legends, error associations, focus management and pending states. Keep consent beside the relevant phone field.
 
-The example repository includes Playwright tests for the two presentations. Run from its root after installing dependencies:
+The example repository includes Playwright tests for the three presentations. Run from its root after installing dependencies:
 
 ```sh
 npm --prefix examples/playground install

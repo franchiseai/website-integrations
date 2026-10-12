@@ -8,7 +8,7 @@ npm install @franchiseai/website-integrations react@^19 react-dom@^19
 
 ## Start with a complete example
 
-The [playground source](https://github.com/franchiseai/website-integrations/tree/main/examples/playground) contains a runnable Vite app and two designs. Its `QualificationForm.tsx` renders every phase, current question type, validation errors, keyboard controls, consent and outcomes. Copy it into your site as a starting point, or replace all its markup. No presentation components come from the integration package.
+The [playground source](https://github.com/franchiseai/website-integrations/tree/main/examples/playground) contains a runnable Vite app and three designs. Its `QualificationForm.tsx` renders every phase, current question type, validation errors, keyboard controls, consent and outcomes. Copy it into your site as a starting point, or replace all its markup. No presentation components come from the integration package.
 
 After copying `QualificationForm.tsx` into your project, this wrapper is complete:
 
@@ -32,7 +32,7 @@ export function FranchiseEnquiry() {
 }
 ```
 
-Copy relevant example styles or apply your own CSS. The `design` prop belongs only to this example renderer, not to the package API. The two example themes use a parent `site-table` or `site-pulse` class; inspect `App.tsx` for their surrounding layout.
+Copy relevant example styles or apply your own CSS. The `design` prop belongs only to this example renderer, not to the package API. The example themes use a parent `table`, `pulse` or `outpost` class; inspect `App.tsx` and `OutpostExperience.tsx` for their surrounding layouts. Outpost demonstrates an external map selection feeding `actions.setAnswer()` and a native dialog that preserves the controller when closed.
 
 ## Compose from scratch
 

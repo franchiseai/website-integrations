@@ -2,7 +2,7 @@
 
 Headless franchise qualification for custom React and Astro websites. You own the HTML, CSS and interaction design; the integration manages validation, lead capture, page saves and server-controlled qualification.
 
-**For developers:** [Read the docs](https://franchiseai.github.io/website-integrations/) · [Try the two designs](https://franchiseai.github.io/website-integrations/playground/)
+**For developers:** [Read the docs](https://franchiseai.github.io/website-integrations/) · [Try the three designs](https://franchiseai.github.io/website-integrations/playground/)
 
 **For agents:** [Start here](https://franchiseai.github.io/website-integrations/llms.txt) · [Complete plain-text guide](https://franchiseai.github.io/website-integrations/llms-full.txt)
 
@@ -45,7 +45,7 @@ npm --prefix examples/playground install
 npm --prefix examples/playground run dev
 ```
 
-Open the URL printed by Vite. Common Table and Pulse demonstrate two presentations of the same integration. All example submissions are simulated; no emails or leads are created. `examples/playground/src/QualificationForm.tsx` is a complete website-owned renderer that you can copy and restyle.
+Open the URL printed by Vite. Common Table, Pulse and Outpost demonstrate three presentations of the same integration. Outpost starts with an interactive sample-territory map and opens qualification in a modal with the chosen place prefilled. All example submissions are simulated; no emails or leads are created. `examples/playground/src/QualificationForm.tsx` is a complete website-owned renderer that you can copy and restyle.
 
 ## Scope
 

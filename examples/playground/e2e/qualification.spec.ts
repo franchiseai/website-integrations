@@ -17,12 +17,14 @@ async function finish(page: Page) {
   await page.getByRole('button', { name: 'Find my next step' }).click();
 }
 
-for (const design of ['01 Common Table', '02 Pulse']) {
+for (const design of ['01 Common Table', '02 Pulse', '03 Outpost']) {
   test(`${design}: qualification, validation, continuation and mobile layout`, async ({
     page,
   }) => {
     await page.goto('/');
     await page.getByRole('button', { name: design, exact: true }).click();
+    if (design === '03 Outpost')
+      await page.getByRole('button', { name: 'Build your outpost' }).click();
     await page.getByRole('button', { name: 'Continue', exact: false }).click();
     await expect(page.getByText('First name is required.')).toBeVisible();
     await firstPage(page);
@@ -38,7 +40,11 @@ for (const design of ['01 Common Table', '02 Pulse']) {
       page.getByText('Demo preview · No email was sent.')
     ).toBeVisible();
     await page.setViewportSize({ width: 390, height: 844 });
+    if (design === '03 Outpost')
+      await page.getByRole('button', { name: 'Close field notes' }).click();
     await page.getByRole('button', { name: 'Reset' }).click();
+    if (design === '03 Outpost')
+      await page.getByRole('button', { name: 'Build your outpost' }).click();
     await expect(
       page.getByRole('heading', { name: 'First, the big picture.' })
     ).toBeVisible();
@@ -60,6 +66,47 @@ test('switching presentation preserves answers without changing the page URL', a
     'Alex'
   );
   await expect(page).toHaveURL('/?utm_source=agency');
+});
+
+test('Outpost: map prefill, dialog dismissal and shared state across designs', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: '03 Outpost', exact: true }).click();
+  await page.getByRole('button', { name: 'Choose Bristol' }).click();
+  await expect(
+    page.getByRole('heading', { name: 'Bristol', exact: true })
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Build your outpost' }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  await expect(
+    page.getByLabel('Where would you like to open?', { exact: false })
+  ).toHaveValue('Bristol');
+  await page.getByLabel('First name', { exact: false }).fill('Alex');
+  await page.keyboard.press('Escape');
+  await expect(dialog).not.toBeVisible();
+  await expect(
+    page.getByRole('button', { name: 'Build your outpost' })
+  ).toBeFocused();
+  await page.getByRole('button', { name: 'Your field notes' }).click();
+  await expect(page.getByLabel('First name', { exact: false })).toHaveValue(
+    'Alex'
+  );
+  await page.getByRole('button', { name: 'Close field notes' }).click();
+  await page
+    .getByRole('button', { name: '01 Common Table', exact: true })
+    .click();
+  await expect(
+    page.getByLabel('Where would you like to open?', { exact: false })
+  ).toHaveValue('Bristol');
+  await page.getByRole('button', { name: '03 Outpost', exact: true }).click();
+  await page.getByRole('button', { name: 'Build your outpost' }).click();
+  await firstPage(page);
+  await page.getByRole('button', { name: 'Close field notes' }).click();
+  await expect(
+    page.getByRole('button', { name: 'Choose Brighton' })
+  ).toBeDisabled();
 });
 
 test('not-qualified, returning and recovery scenarios', async ({ page }) => {
