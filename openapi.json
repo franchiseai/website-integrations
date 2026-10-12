@@ -1,0 +1,1111 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "FS Ai Agency \u00b7 Website integrations API",
+    "version": "0.1.0",
+    "description": "[\u2190 Integration guides](https://franchiseai.github.io/website-integrations/) \u00b7 [Download OpenAPI](https://franchiseai.github.io/website-integrations/openapi.json)\n\nThe existing public HTTP surface used by @franchiseai/website-integrations. Prefer the package for React/Astro websites so validation, page saves and server progression remain consistent. These routes require no admin token or cookie. Application IDs are opaque credentials, not publicly shareable identifiers. CORS must permit the customer website origin. Response schemas describe the fields used by qualification and allow additional platform metadata. This document does not cover signing, booking or administrator endpoints. See the integration guides at https://franchiseai.github.io/website-integrations/.",
+    "contact": {
+      "name": "FranchiseAI",
+      "url": "https://github.com/franchiseai/website-integrations"
+    },
+    "x-logo": {
+      "url": "/website-integrations/logo.svg",
+      "backgroundColor": "#bdff00",
+      "altText": "FS Ai Agency",
+      "href": "/website-integrations/"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://staging.api.franchisesystems.ai",
+      "description": "Staging \u2014 confirm access and customer configuration with the platform team."
+    },
+    {
+      "url": "https://v2.api.franchisesystems.ai",
+      "description": "Production \u2014 requests may create real leads and send email."
+    }
+  ],
+  "security": [],
+  "tags": [
+    {
+      "name": "Configuration",
+      "description": "Resolve a site and its published questions."
+    },
+    {
+      "name": "Qualification",
+      "description": "Capture and save qualification answers."
+    },
+    {
+      "name": "Continuation",
+      "description": "Record progress and resolve the hosted continuation."
+    }
+  ],
+  "paths": {
+    "/funnel/site-info": {
+      "post": {
+        "operationId": "getQualificationSite",
+        "summary": "Resolve a published funnel",
+        "description": "Returns null with HTTP 200 when no site matches. The headless adapter requires a published funnel with a qualifier entry.",
+        "tags": ["Configuration"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SiteSelector"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response. The response body is not wrapped in a data envelope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/SiteInfo"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or field validation failure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Application or published funnel unavailable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit reached. Respect Retry-After; do not retry in a loop.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds until retry; SDK caps very large values.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/funnel/form": {
+      "post": {
+        "operationId": "getQualificationForm",
+        "summary": "Read the configured form",
+        "description": "Returns the configured form for this host/slug and kind, or null when unset/unavailable. A configured missing qualifier form is a load error in the headless adapter.",
+        "tags": ["Configuration"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SiteSelector"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "qualifier",
+                          "application",
+                          "compliance",
+                          "fddRequest"
+                        ],
+                        "description": "The website integration uses qualifier. Other values belong to the hosted flow."
+                      }
+                    },
+                    "required": ["kind"]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response. The response body is not wrapped in a data envelope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Form"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or field validation failure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Application or published funnel unavailable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit reached. Respect Retry-After; do not retry in a loop.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds until retry; SDK caps very large values.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/funnel/leads": {
+      "post": {
+        "operationId": "createQualificationLead",
+        "summary": "Start an enquiry or request secure continuation",
+        "description": "For a new visitor, creates a lead and returns its opaque credential. For a returning email, returns resume_link_sent without a credential. That response is identical if delivery is suppressed, throttled or fails; it is not a delivery receipt. The integration reuses this endpoint for secure email continuation.",
+        "tags": ["Qualification"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLeadRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful response. The response body is not wrapped in a data envelope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateLeadResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or field validation failure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Application or published funnel unavailable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit reached. Respect Retry-After; do not retry in a loop.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds until retry; SDK caps very large values.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing account or another application conflict; an optional structured code/data may describe portal continuation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/funnel/leads/{applicationId}": {
+      "patch": {
+        "operationId": "updateQualificationLead",
+        "summary": "Update captured contact details",
+        "description": "Only permitted lead fields are updated. The application must belong to a live funnel. The headless integration updates names and phone; email stays locked after creation.",
+        "tags": ["Qualification"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeadRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response. The response body is not wrapped in a data envelope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "applicationId": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["applicationId"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or field validation failure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Application or published funnel unavailable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit reached. Respect Retry-After; do not retry in a loop.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds until retry; SDK caps very large values.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "applicationId",
+            "in": "path",
+            "required": true,
+            "description": "Opaque credential from the lead creation response. This is an API path parameter; never use it in a browser navigation link.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/funnel/submissions": {
+      "post": {
+        "operationId": "submitQualificationPage",
+        "summary": "Save a configured form page",
+        "description": "Preserve configured field IDs and choices. pageId scopes validation to the configured page; complete marks its final submission. The server evaluates qualification. An absent qualified flag is treated as qualified by the current hosted/headless behavior.",
+        "tags": ["Qualification"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitPageRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response. The response body is not wrapped in a data envelope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitPageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or field validation failure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Application or published funnel unavailable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit reached. Respect Retry-After; do not retry in a loop.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds until retry; SDK caps very large values.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/funnel/progress": {
+      "post": {
+        "operationId": "recordQualificationProgress",
+        "summary": "Record a completed funnel step",
+        "description": "Records a completed step for server-side replay. After a final save, retry this phase on failure without resubmitting answered questions.",
+        "tags": ["Continuation"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "applicationId": {
+                    "type": "string"
+                  },
+                  "nodeId": {
+                    "type": "string"
+                  },
+                  "outcome": {
+                    "type": "string",
+                    "examples": ["qualified", "not_qualified"],
+                    "description": "Use the server result. This integration records qualified or not_qualified."
+                  }
+                },
+                "required": ["applicationId", "nodeId", "outcome"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response. The response body is not wrapped in a data envelope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "const": true
+                    }
+                  },
+                  "required": ["ok"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or field validation failure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Application or published funnel unavailable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit reached. Respect Retry-After; do not retry in a loop.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds until retry; SDK caps very large values.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/funnel/entry": {
+      "post": {
+        "operationId": "resolveQualificationEntry",
+        "summary": "Resolve the next funnel node",
+        "description": "Resolves the next node from the published flow and recorded progress. The returned ID is metadata, not an authenticated redirect URL.",
+        "tags": ["Continuation"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "applicationId": {
+                    "type": "string"
+                  }
+                },
+                "required": ["applicationId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response. The response body is not wrapped in a data envelope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "entryNodeId": {
+                      "type": "string"
+                    },
+                    "lane": {
+                      "type": ["string", "null"],
+                      "enum": ["qualified", "notQualified", null]
+                    }
+                  },
+                  "required": ["entryNodeId"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or field validation failure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Application or published funnel unavailable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit reached. Respect Retry-After; do not retry in a loop.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds until retry; SDK caps very large values.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SiteSelector": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Published funnel slug."
+          },
+          "host": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Configured funnel host; takes precedence when both are sent."
+          }
+        },
+        "anyOf": [
+          {
+            "required": ["slug"]
+          },
+          {
+            "required": ["host"]
+          }
+        ]
+      },
+      "SiteInfo": {
+        "type": "object",
+        "properties": {
+          "brandId": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "domain": {
+            "type": ["string", "null"]
+          },
+          "name": {
+            "type": "string"
+          },
+          "smsOptInEnabled": {
+            "type": "boolean"
+          },
+          "qualifierFormId": {
+            "type": ["string", "null"]
+          },
+          "applicationFormId": {
+            "type": ["string", "null"]
+          },
+          "funnelDoc": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublishedFunnel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": ["brandId", "slug", "qualifierFormId"],
+        "description": "Fields consumed by the qualification integration. Other site metadata is permitted."
+      },
+      "PublishedFunnel": {
+        "type": "object",
+        "properties": {
+          "entryStepId": {
+            "type": "string"
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "config": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["type"]
+                }
+              },
+              "required": ["id", "config"]
+            }
+          }
+        },
+        "required": ["entryStepId", "nodes"]
+      },
+      "Question": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "short-text",
+              "long-text",
+              "number",
+              "currency",
+              "date",
+              "url",
+              "email",
+              "phone",
+              "multiselect",
+              "singleselect",
+              "dropdown",
+              "boolean"
+            ]
+          },
+          "question": {
+            "type": ["string", "null"]
+          },
+          "name": {
+            "type": ["string", "null"]
+          },
+          "required": {
+            "type": ["boolean", "null"]
+          },
+          "options": {
+            "type": ["array", "null"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "dataLocation": {
+            "type": ["string", "null"]
+          },
+          "description": {
+            "type": ["string", "null"]
+          }
+        },
+        "required": ["id", "type"],
+        "description": "Fields consumed by the integration. Additional platform metadata may be present."
+      },
+      "FormPage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": ["string", "null"]
+          },
+          "subtitle": {
+            "type": ["string", "null"]
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Question"
+            }
+          }
+        },
+        "required": ["id", "fields"]
+      },
+      "Form": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "pages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FormPage"
+            }
+          }
+        },
+        "required": ["id", "pages"],
+        "description": "Configured form; extra platform metadata may be present."
+      },
+      "CreateLeadRequest": {
+        "type": "object",
+        "properties": {
+          "brandId": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "type": "string",
+            "description": "International phone number beginning with +."
+          },
+          "netWorth": {
+            "type": "string"
+          },
+          "timeframeToLaunch": {
+            "type": "string"
+          },
+          "interestedMarkets": {
+            "type": "string"
+          },
+          "utmParams": {
+            "type": "string"
+          },
+          "smsConsent": {
+            "type": "boolean",
+            "description": "Explicit opt-in only. The integration sends consent beside its configured phone page via submissions."
+          }
+        },
+        "required": ["brandId", "firstName", "lastName", "email"]
+      },
+      "CreateLeadResponse": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "const": "created"
+              },
+              "applicationId": {
+                "type": "string",
+                "description": "Opaque application credential. Keep in memory; never place in browser navigation links, page HTML or analytics."
+              }
+            },
+            "required": ["status", "applicationId"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "const": "resume_link_sent"
+              }
+            },
+            "required": ["status"]
+          }
+        ]
+      },
+      "UpdateLeadRequest": {
+        "type": "object",
+        "properties": {
+          "updates": {
+            "type": "object",
+            "properties": {
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              },
+              "netWorth": {
+                "type": "string"
+              },
+              "cashOnHand": {
+                "type": "string"
+              },
+              "timeframeToLaunch": {
+                "type": "string"
+              },
+              "interestedMarkets": {
+                "type": "string"
+              },
+              "stateId": {
+                "type": "string"
+              },
+              "residenceStateId": {
+                "type": "string"
+              },
+              "completedSteps": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "SubmitPageRequest": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": ["qualifier", "application", "compliance", "fddRequest"],
+            "description": "The website integration uses qualifier. Other values belong to the hosted flow."
+          },
+          "submissions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "fieldId": {
+                  "type": "string"
+                },
+                "value": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": ["fieldId", "value"]
+            }
+          },
+          "pageId": {
+            "type": "string"
+          },
+          "complete": {
+            "type": "boolean",
+            "description": "True on the last configured page."
+          },
+          "smsConsent": {
+            "type": "boolean",
+            "description": "Affirmative opt-in for the phone field on this page; never preselect."
+          }
+        },
+        "required": ["applicationId", "kind"]
+      },
+      "SubmitPageResponse": {
+        "type": "object",
+        "properties": {
+          "qualified": {
+            "type": "boolean"
+          },
+          "appQualified": {
+            "type": "boolean"
+          },
+          "appQualifyDecided": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "const": false
+          },
+          "status": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "description": "Optional structured authentication code, e.g. account-exists."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "redirectUrl": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          },
+          "fieldErrors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "fieldId": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "string",
+                  "enum": ["required", "type", "option", "min"]
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": ["fieldId", "code", "message"]
+            }
+          }
+        },
+        "required": ["message"]
+      }
+    }
+  }
+}

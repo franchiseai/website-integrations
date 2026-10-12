@@ -1,0 +1,346 @@
+# FS Ai Agency website integrations 0.1.0
+
+Package: @franchiseai/website-integrations
+Docs: https://franchiseai.github.io/website-integrations/
+OpenAPI: https://franchiseai.github.io/website-integrations/openapi.json
+Example: https://github.com/franchiseai/website-integrations/tree/main/examples/playground
+
+# Get started
+
+Install the package in a React 19 project. For Astro, use a React island with Astro's React integration configured. The published package includes all required platform behavior; do not install the private platform SDK.
+
+```sh
+npm install @franchiseai/website-integrations react@^19 react-dom@^19
+```
+
+## Start with a complete example
+
+The [playground source](https://github.com/franchiseai/website-integrations/tree/main/examples/playground) contains a runnable Vite app and two designs. Its `QualificationForm.tsx` renders every phase, current question type, validation errors, keyboard controls, consent and outcomes. Copy it into your site as a starting point, or replace all its markup. No presentation components come from the integration package.
+
+After copying `QualificationForm.tsx` into your project, this wrapper is complete:
+
+```tsx
+import { useState } from 'react';
+import {
+  createQualificationController,
+  useQualification,
+} from '@franchiseai/website-integrations';
+import { createDemoQualificationAdapter } from '@franchiseai/website-integrations/demo';
+import { QualificationForm } from './QualificationForm';
+
+export function FranchiseEnquiry() {
+  const [controller] = useState(() =>
+    createQualificationController({
+      adapter: createDemoQualificationAdapter({ scenario: 'qualified' }),
+    })
+  );
+  const { state, actions } = useQualification(controller);
+  return <QualificationForm state={state} actions={actions} design="table" />;
+}
+```
+
+Copy relevant example styles or apply your own CSS. The `design` prop belongs only to this example renderer, not to the package API. The two example themes use a parent `site-table` or `site-pulse` class; inspect `App.tsx` for their surrounding layout.
+
+## Compose from scratch
+
+Read `state.definition?.pages[state.pageIndex]` to obtain the configured page. Render the pinned contact fields on page zero and render its questions with their published IDs, choices, required flags and types. Bind contact fields to `actions.setIdentity`, answers to `actions.setAnswer`, and form submit to `actions.submit`. Display `fieldErrors` and the request-level `error`. Every phase in the [contract](contract.md) needs a corresponding view or control state.
+
+Call actions from event handlers, never during render. Keep the controller stable across renders; create a new one when the published site changes. A controller represents one visitor's enquiry and must never be shared between requests on a server. React Strict Mode mounting is supported.
+
+## Astro
+
+Mount the React wrapper in an island:
+
+```astro
+---
+import { FranchiseEnquiry } from '../components/FranchiseEnquiry';
+---
+<section class="franchise-enquiry">
+  <h2>Build your next chapter</h2>
+  <FranchiseEnquiry client:load />
+</section>
+```
+
+The package does not read browser globals on initial render. If your own wrapper reads `window` during initialization, move that read after hydration or use `client:only="react"`. Do not serialize filled controller snapshots into server-rendered HTML. The supplied runnable example and browser tests use React/Vite; Astro integration is documented but has not been exercised in an Astro app.
+
+## Without the React hook
+
+The controller supports `getSnapshot()`, `subscribe(listener)` and `load()` directly. Subscribe to state changes, call `load`, and unsubscribe when your view unmounts. All mutations go through controller actions. React remains a package peer dependency in this release.
+
+Next: use the [demo scenarios](development.md), then follow [going live](going-live.md).
+
+
+Source: https://franchiseai.github.io/website-integrations/getting-started.md
+
+---
+
+# Contract and presentation rules
+
+The core is framework independent. `createQualificationController(options)` returns a subscribable controller. `useQualification(controller)` is only a React bridge: it subscribes and calls `load()` on mount. It returns `{ state, actions }`.
+
+| State            | Meaning                                                                                                                                                     |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `phase`          | `idle`, `loading`, `load_error`, `editing`, `submitting`, `completion_error`, `outcome`, `continuing`, `complete`, `resume_link_sent`, or `portal_required` |
+| `definition`     | Brand/node identity and configured pages/questions; null before loading                                                                                     |
+| `pageIndex`      | Current zero-based configured page                                                                                                                          |
+| `identity`       | First name, last name and email supplied in this enquiry                                                                                                    |
+| `identityLocked` | The email is fixed after a lead was successfully created; names remain editable                                                                             |
+| `answers`        | Question ID to string, number, boolean, string array, null or undefined                                                                                     |
+| `fieldErrors`    | Question ID or contact key to human-readable validation message                                                                                             |
+| `error`          | A recoverable request-level message; display it even when field errors are off-page                                                                         |
+| `retryAt`        | Earliest allowed retry as epoch milliseconds, or null; actions enforce the wait                                                                             |
+| `smsConsent`     | Affirmative opt-in, false initially and reset when changing phone or page                                                                                   |
+| `outcome`        | Server result: `qualified` or `not_qualified`, after successful progress persistence                                                                        |
+| `next`           | Server-resolved next node; the current package does not render it                                                                                           |
+| `portalUrl`      | Portal link only when the server identifies an existing applicant                                                                                           |
+
+| Action                      | Behaviour                                                                            |
+| --------------------------- | ------------------------------------------------------------------------------------ |
+| `load()`                    | Loads definition; supports retry after `load_error`                                  |
+| `setIdentity(key, value)`   | Edits contact details; a created lead's email cannot change                          |
+| `setAnswer(fieldId, value)` | Updates a question on the current page                                               |
+| `setSmsConsent(boolean)`    | Updates consent; never preset to true                                                |
+| `back()`                    | Returns to an earlier page without losing answers                                    |
+| `submit()`                  | Validates, captures a lead, saves the page, then advances or completes qualification |
+| `continue()`                | From an outcome, requests the existing secure continuation email                     |
+| `useDifferentEmail()`       | Returns from a returning-applicant notice to the first page                          |
+
+Submissions are guarded synchronously, so a rapid double click cannot start two in-flight creates. If creation succeeds but saving fails, retry reuses that lead. If saving qualification succeeds but recording progress fails, `completion_error` asks the presentation to offer `submit()` again; retry completes progress without resubmitting answers, and editing remains locked during that recovery. A network failure during the create request itself has an ambiguous outcome; retry may produce the returning-email path, which safely verifies ownership rather than adopting a guessed email.
+
+`resume_link_sent` is an intentionally non-disclosing response. Do not imply that an account is confirmed to exist. The existing endpoint may throttle email delivery and still return this response. `complete` means the continuation request was accepted, not proof of email delivery or completion of the full application.
+
+## Design freedom and behavioural boundaries
+
+Layout, page width, typography, imagery, field presentation, animation, and result presentation belong entirely to the website. A single configured page can be presented as an inline form, a modal, a conversational UI, or one question at a time. The current controller saves the configured page as a unit: local presentation steps do not change server page boundaries.
+
+Render the three pinned contact fields on the first page using `FUNNEL_CONTACT_BLOCK_FIELDS`. Authored questions do not replace that contact block. Use the published question IDs, types, required flags and choices. Supported types are short/long text, currency, number, date, URL, email, phone, multiselect, singleselect, boolean, and dropdown. Monetary/number input may be a number or a formatted string accepted by SDK validation. Multiselect answers are string arrays; boolean answers are booleans.
+
+Place optional SMS consent only when `definition.smsOptInEnabled` and `funnelSmsConsentAnchorFieldId(page.questions)` returns a phone field. Render the exact `FUNNEL_SMS_CONSENT_COPY` adjacent to that field and bind it to `smsConsent`. Changing the number retracts the prior opt-in. Never make SMS consent a condition of submitting the form.
+
+Represent loading, errors, returning applicants, both outcomes, and continuation as well as the happy path. Keep inputs labelled, group choices with a legend, associate errors with their fields, and manage focus on page changes/errors. Use `aria-busy` during writes. Disable pending actions, and use `retryAt` to explain a rate-limit wait. The example's visual styles are optional; those interactions remain necessary in replacement layouts.
+
+## Attribution and events
+
+`readQualificationAttribution(queryString)` allowlists UTM source/medium/campaign/term/content and `gclid`/`fbclid`, ignoring credentials and unrelated parameters. Pass the result once for this enquiry. The controller does not scrape the host URL, write cookies, load ad tags, send ad conversions, or store answers in browser storage.
+
+`onEvent` receives `loaded`, `lead_created`, `page_saved`, `qualified`, `not_qualified`, `continuation_requested`, `resume_link_sent`, or `submission_failed`, with node/page IDs. These are lifecycle callbacks, not the hosted funnel analytics schema. Observer exceptions cannot prevent submission. Wire consent-aware platform analytics separately; do not send answers or application credentials into analytics.
+
+## Continuation and production scope
+
+There is no cross-origin application-ID redirect. After saving qualification progress, `continue()` uses the existing returning-lead endpoint to request a secure resume email. Following that email uses the established hosted funnel's token redemption and server-resolved next step. The prototype does not redeem tokens itself or restore an enquiry on reload. Do not serialize the controller snapshot into public HTML, logs or query strings.
+
+Before production promotion: exercise the adapter against a provisioned staging brand including CORS, email and published-flow changes; define durable sessions and a secure immediate handoff if required; integrate measurement with the host's consent handling; and migrate the standalone qualifier to the same controller to remove workflow duplication. These are known next steps, not capabilities implied by the demo.
+
+
+Source: https://franchiseai.github.io/website-integrations/contract.md
+
+---
+
+# Development workflow and agent tools
+
+The docs use VitePress (guides, search, code copying) and Redoc (the [OpenAPI 3.1 reference](https://franchiseai.github.io/website-integrations/api.html)). The [raw spec](https://franchiseai.github.io/website-integrations/openapi.json) can be used by compatible API tools. It describes HTTP endpoints; the guide describes controller state and UI responsibilities.
+
+The development tools are ordinary code tools: TypeScript autocomplete, readable Markdown contracts, a deterministic demo adapter, a full example renderer, and browser tests. There is no special agent server, MCP dependency, interactive CLI generator or separate inspector panel in this release.
+
+## What a developer does
+
+1. Give the agent the docs URL or install the optional skill.
+2. Install the package in the customer website.
+3. Build the UI against demo data and the customer’s design system.
+4. Exercise every scenario and check keyboard/mobile behavior.
+5. Supply the platform API base URL and published funnel slug, then switch to the live adapter in a provisioned staging environment.
+6. Verify the live configuration and secure continuation email before shipping the website.
+
+## Give an agent one document
+
+[llms-full.txt](https://franchiseai.github.io/website-integrations/llms-full.txt) contains the complete versioned guides without a JavaScript shell, navigation markup or a login. [llms.txt](https://franchiseai.github.io/website-integrations/llms.txt) is a short index. Each guide is also available as raw Markdown beside its rendered HTML. The package carries these Markdown guides for local/offline reading.
+
+For skill-aware agents:
+
+```sh
+npx skills add franchiseai/website-integrations --skill integrate-fsai
+```
+
+The skill routes to bundled copies of these guides. It does not contain another implementation or a separate API contract.
+
+## Demo scenarios
+
+```ts
+import { createDemoQualificationAdapter } from '@franchiseai/website-integrations/demo';
+
+const adapter = createDemoQualificationAdapter({
+  scenario: 'submission_error',
+  delayMs: 450,
+});
+```
+
+| Scenario           | Expected behavior                                                                             |
+| ------------------ | --------------------------------------------------------------------------------------------- |
+| `qualified`        | Saves both pages, then shows the qualified result                                             |
+| `not_qualified`    | Saves both pages, then shows the alternate result                                             |
+| `returning`        | Shows the returning-email notice without an application credential                            |
+| `submission_error` | First page save fails once; retry uses the same created lead                                  |
+| `progress_error`   | Final answers save, progress fails once; retry finishes progress without resubmitting answers |
+| `unavailable`      | Initial loading fails once; loading again recovers                                            |
+
+Create a new controller to reset a scenario. `delayMs: 0` is useful in tests. Demo outcomes are selected by the scenario, not inferred from entered answers. Demo continuation simulates an accepted request; it sends no email.
+
+## Inspect behavior
+
+TypeScript describes the complete `QualificationState` and action surface. During local demo development, inspect `state.phase`, `pageIndex`, `fieldErrors` and `error`. Avoid recording live identity, answers or credentials in console logs, recordings or analytics. The controller intentionally keeps the application credential outside its public snapshot.
+
+`onEvent` supplies lifecycle names and page/node IDs. Use it for consent-aware measurement or a local event timeline. It supplies no answers or contact details; an event handler throwing cannot block submission. There is no automatic Google/Meta conversion delivery.
+
+The hosted playground has design/scenario selectors and a reset button. Those are demo controls, not production UI and not a requirement for agency sites.
+
+## Validate a custom design
+
+Verify blank/invalid fields, both outcomes, returning visitors, save/progress/load retries, rapid double clicks, back navigation, email locking, unchecked SMS consent, and mobile layout. Preserve labels, legends, error associations, focus management and pending states. Keep consent beside the relevant phone field.
+
+The example repository includes Playwright tests for the two presentations. Run from its root after installing dependencies:
+
+```sh
+npm --prefix examples/playground install
+npm --prefix examples/playground exec -- playwright install chromium
+npm --prefix examples/playground run test:e2e
+```
+
+These tests use the demo adapter. Live configuration needs the separate checks in [going live](going-live.md).
+
+
+Source: https://franchiseai.github.io/website-integrations/development.md
+
+---
+
+# Connect a published funnel
+
+You need the platform API base URL, the customer’s published funnel slug (or configured funnel host), and the customer website’s origin permitted by backend CORS. These are configuration values, not administrator credentials. Obtain the values from your platform team rather than guessing production URLs.
+
+```ts
+import {
+  createQualificationController,
+  createLiveQualificationAdapter,
+  readQualificationAttribution,
+} from '@franchiseai/website-integrations';
+
+const controller = createQualificationController({
+  adapter: createLiveQualificationAdapter({
+    apiBaseUrl: 'https://YOUR-PLATFORM-API',
+    site: { slug: 'YOUR-PUBLISHED-FUNNEL' },
+  }),
+  attribution: readQualificationAttribution(hostPageQueryString),
+  onEvent(event) {
+    // Forward permitted non-sensitive events to the site's measurement layer.
+  },
+});
+```
+
+`hostPageQueryString` is an explicit string supplied by your wrapper after hydration, or from the host framework. It is not a package global. Use `{ host: 'franchise.customer.example' }` instead of `slug` only when that host is configured as the platform’s funnel host. The agency website domain is not automatically a funnel selector.
+
+Retain the controller across renders just as in the demo. The default adapter sends no cookies, admin token, or stored platform session token. It uses the existing SDK transport and endpoint contracts bundled into the package. Consumers do not need the internal SDK.
+
+## Supported published configuration
+
+The published funnel must start with a qualifier. This package will not skip an earlier content/signature step. A configured qualifier form must be available and have pages. When there is no configured qualifier form, the flow collects the required contact block only. A missing configured form fails closed.
+
+The server controls qualification and the next node. The website may change presentation but must preserve field IDs, choices, required fields, page boundaries and optional consent behavior. The package uses existing `/funnel` endpoints for site information, forms, leads, submissions, progress and entry resolution. This integration adds no backend routes or database migrations; the deployed backend must already support those contracts.
+
+## What happens on continuation
+
+The first successful submit creates a lead. Each configured page is saved. After the last page, the integration records progress and resolves the next step on the server. `continue()` requests a secure resume email using the existing returning-lead behavior. The email opens the established hosted funnel.
+
+An accepted request is not proof of delivery: the server may throttle email sends while returning the same non-disclosing response. Do not build a link containing the application ID, infer that an account exists, or redirect straight to an authenticated application based on the local result.
+
+## Before the website goes live
+
+Use a provisioned staging funnel to verify its published entry, actual question types, both server outcomes, CORS from the website origin, new and returning applicant behavior, save/progress recovery, consent recording and secure-email delivery. The demo and package tests do not verify these environment-dependent facts.
+
+This version holds the enquiry in memory. Refreshing loses local progress and a returning visitor verifies ownership via email. Persistent sessions and immediate secure handoff require further platform work. The existing hosted qualifier has not yet been migrated to this controller.
+
+## Existing SDK consumers
+
+Internal callers can pass their existing typed `funnel` service to `createSdkQualificationAdapter({ funnel, site })`. That advanced entry point uses the caller's transport configuration. Agency websites should use `createLiveQualificationAdapter` for the explicit public, no-session transport.
+
+
+Source: https://franchiseai.github.io/website-integrations/going-live.md
+
+---
+
+# Troubleshooting
+
+## Nothing appears
+
+The package intentionally renders no UI. Install a website-owned renderer or use the full example. Ensure the controller is stable and `useQualification` is mounted. For a non-React subscriber, call `load()` yourself. Astro islands must hydrate.
+
+## Loading fails
+
+Check `state.error` and the browser network panel. Confirm the API base URL, published slug/host and allowed website origin. The published funnel must start with a qualifier. A configured but missing form is an error, not permission to show a contact-only fallback. Render retry with `actions.load()`.
+
+## npm cannot find the package
+
+Use the public scope `@franchiseai/website-integrations`. Verify that your npm registry points to the public npm registry or a proxy that can resolve it. The private monorepo SDK is not a prerequisite. If a version has not yet been published, use a provided release tarball for evaluation; documentation alone is not proof of registry publication.
+
+## Questions or answers reset on every render
+
+Do not create the controller inside the render body without `useState` or equivalent stable ownership. Recreate it only to start a new enquiry or change configuration. Keep one controller per visitor and form instance.
+
+## Email is read-only
+
+This is expected after a lead is created. Retrying a failed save must reuse that lead. The returning-applicant notice offers `useDifferentEmail`; it is not an account-switch action for an already created lead.
+
+## Answers saved but the form shows an error
+
+`completion_error` means the final answers were saved but progress/entry resolution failed. Offer `submit()` to retry completion. Keep the answered form locked; the controller will not resubmit the answers during this recovery.
+
+## Rate limited
+
+Render the wait indicated by `retryAt` and permit retry after it passes. The controller enforces the delay. Do not build a retry loop around requests. For live debugging, inspect HTTP status and retry metadata without logging personal information.
+
+## No email arrives
+
+Demo mode never sends email. In live mode, `complete` and `resume_link_sent` are accepted/non-disclosing responses, not delivery receipts. Check the platform’s mail delivery and throttling with the responsible platform team. Do not work around this by exposing an application credential.
+
+## My design needs one question per screen
+
+You can present a configured page with local visual substeps. The controller validates and saves the whole configured page when `submit()` is called. Per-question server saves, changing page order, adding file uploads, or skipping required published steps require contract changes; CSS alone cannot add them.
+
+
+Source: https://franchiseai.github.io/website-integrations/troubleshooting.md
+
+---
+
+# Maintaining and releasing
+
+The public repository is a curated distribution of the integration maintained with the platform. It contains the built package, documentation, optional skill and runnable website example. It does not contain the private platform source or backend configuration.
+
+## One source for documentation
+
+Each topic starts as Markdown. VitePress renders the guides and Redocly renders the OpenAPI 3.1 reference. The build also creates raw Markdown, `llms.txt`, `llms-full.txt`, package documentation and skill references from the same inputs. Change the maintained source and regenerate; do not make incompatible corrections in one generated copy. Published package versions contain their own documentation snapshot. The Pages site follows the latest repository version.
+
+## Development verification
+
+In the platform repository, build the SDK and package, run the controller/transport tests, type-check and lint affected workspaces, and build/test the playground. The transport is shared with the hosted funnel; validate that the hosted funnel still compiles when it changes. Export only the allowlisted integration files.
+
+The packed release must install in an empty project without private workspace dependencies. Check its JavaScript entry points, declaration resolution and runnable example. Inspect `npm pack --dry-run` before publication. A package that only works through workspace symlinks is not ready.
+
+## Public repository
+
+The root package contains prebuilt JavaScript and declarations; consumers do not rebuild platform internals. Install the root and `examples/playground` dependencies to run the example against the included package. The Pages output is in `docs/`, with `.nojekyll`, and is served from `main:/docs`. It contains VitePress guides, a Redoc reference, the OpenAPI document and the built network-free playground. Sources live in `site/` and `openapi.json`. Run `npm run docs:dev` for VitePress development or `npm run docs:build` to lint the OpenAPI spec and rebuild all documentation. The brand theme extends the standard VitePress theme; it does not replace its search or navigation.
+
+## Publish
+
+A maintainer with npm organization access publishes from the curated repository after verification:
+
+```sh
+npm pack --dry-run
+npm publish --access public
+```
+
+npm may require interactive second-factor approval. Credentials stay in the maintainer's npm configuration, never in the repository. Increment the version for later releases; published version contents cannot be replaced. Verify the registry version and perform a fresh install after publishing. Tag the matching public repository commit only after the corresponding npm publication succeeds.
+
+This release does not configure an automated npm publisher or save a long-lived token in GitHub. Organization maintainers can separately configure trusted publishing for future releases.
+
+
+Source: https://franchiseai.github.io/website-integrations/maintaining.md
+
+---

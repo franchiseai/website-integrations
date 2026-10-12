@@ -1,0 +1,28 @@
+extends:
+  - recommended
+rules:
+  info-license: off
+openapi:
+  hideDownloadButton: false
+  theme:
+    colors:
+      primary:
+        main: '#526f00'
+      text:
+        primary: '#0d1014'
+    typography:
+      fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif'
+      headings:
+        fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif'
+        fontWeight: '800'
+    sidebar:
+      backgroundColor: '#f4f5ef'
+      textColor: '#34383e'
+      activeTextColor: '#0d1014'
+    rightPanel:
+      backgroundColor: '#0d1014'
+      textColor: '#f7f8f3'
+    logo:
+      maxHeight: '44px'
+      maxWidth: '44px'
+      gutter: '16px'

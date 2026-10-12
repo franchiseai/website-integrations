@@ -1,0 +1,70 @@
+{
+  "name": "@franchiseai/website-integrations",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "docs/*.md",
+    "skills",
+    "examples",
+    "scripts/smoke.mjs",
+    "openapi.json"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./demo": {
+      "types": "./dist/demo.d.ts",
+      "import": "./dist/demo.js"
+    }
+  },
+  "scripts": {
+    "test": "node scripts/smoke.mjs",
+    "docs:dev": "vitepress dev site --port 3014",
+    "docs:build": "node scripts/build-docs.mjs",
+    "openapi:lint": "redocly lint openapi.json"
+  },
+  "dependencies": {
+    "zod": "^3.25.1",
+    "libphonenumber-js": "^1.11.12"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "vitepress": "1.6.4",
+    "@redocly/cli": "2.62.1"
+  },
+  "sideEffects": false,
+  "description": "Headless franchise qualification for custom React and Astro websites",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "license": "UNLICENSED",
+  "homepage": "https://franchiseai.github.io/website-integrations/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/franchiseai/website-integrations.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "franchiseai",
+    "qualification",
+    "headless",
+    "react",
+    "astro"
+  ],
+  "overrides": {
+    "vitepress": {
+      "vite": "6.4.4"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+node_modules/
+*.tgz
+examples/playground/dist/
+site/.vitepress/cache/
+**/test-results/
+**/playwright-report/
+.fsai-public-export
