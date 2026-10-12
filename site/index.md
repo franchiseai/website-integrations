@@ -32,6 +32,26 @@ features:
     linkText: Try both designs
 ---
 
+## Add it to your website in one prompt
+
+Copy this into your coding agent from your existing website project. It will use your site's design and start with safe demo data.
+
+<div class="agent-prompt">
+
+```text
+Add a FranchiseAI qualification flow to this existing website.
+
+First read https://franchiseai.github.io/website-integrations/llms-full.txt and inspect this project's framework, routes, components and design system. Use @franchiseai/website-integrations and its documented controller/hook API. Check React 19 compatibility before installing; don't silently upgrade the site's framework.
+
+Build the flow into the site's existing enquiry journey, reusing its typography, spacing, components and tone. Keep the UI fully custom and responsive. Use the docs' React/Astro setup and example renderer; preserve configured questions, validation, optional consent, server-controlled outcomes and secure email continuation. Include accessible labels, keyboard focus, progress, back navigation, pending states and recoverable errors.
+
+Start with the demo adapter. Verify qualified, not-qualified, returning-visitor, loading-failure and save/progress-retry scenarios without creating real leads or sending email. Keep one stable controller per enquiry and keep credentials out of URLs, browser storage and logs.
+
+Make the demo work end to end, run the project's relevant checks, and show me the result. Then explain the exact live configuration still needed. Connect the live adapter only when I provide the API base URL and published funnel slug or host and authorize a live test. Don't invent endpoints, qualification rules or an applicant-portal login, and don't deploy the site automatically.
+```
+
+</div>
+
 ## Install once. Make it your own.
 
 ```sh

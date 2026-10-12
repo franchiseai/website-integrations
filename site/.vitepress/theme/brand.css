@@ -93,3 +93,32 @@
 .VPHome {
   background: radial-gradient(ellipse at 78% 8%, #bdff001b, transparent 50%);
 }
+.agent-prompt div[class*='language-'] > span.lang {
+  display: none;
+}
+.agent-prompt div[class*='language-'] > button.copy {
+  width: 128px;
+  opacity: 1;
+  background: var(--agency-lime);
+  color: #0d1014;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 650;
+}
+.agent-prompt button.copy::before {
+  content: 'Copy prompt';
+}
+.agent-prompt button.copy.copied::before {
+  content: 'Copied!';
+}
+.agent-prompt button.copy::after {
+  display: none;
+}
+.agent-prompt div[class*='language-'] pre {
+  padding-top: 68px;
+}
+.agent-prompt pre code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.65;
+}
