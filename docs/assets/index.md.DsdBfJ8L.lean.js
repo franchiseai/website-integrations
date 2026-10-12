@@ -1,0 +1,1 @@
+import{_ as a,o as s,c as t,ag as n}from"./chunks/framework.WIXs2PCf.js";const u=JSON.parse('{"title":"","description":"","frontmatter":{"layout":"home"},"headers":[],"relativePath":"index.md","filePath":"index.md"}'),i={name:"index.md"};function o(r,e,l,p,d,h){return s(),t("div",null,[...e[0]||(e[0]=[n("",9)])])}const g=a(i,[["render",o]]);export{u as __pageData,g as default};

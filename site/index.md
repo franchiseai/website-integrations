@@ -1,40 +1,14 @@
 ---
 layout: home
-hero:
-  name: Website integrations.
-  text: '<span>Your design. Connected.</span>'
-  tagline: Build unmistakable customer websites with the qualification flow already handled. One package. Complete creative control.
-  actions:
-    - theme: brand
-      text: Start building →
-      link: /getting-started
-    - theme: alt
-      text: Explore the API
-      link: /api.html
-      target: _self
-    - theme: alt
-      text: Try the playground ↗
-      link: /playground/
-      target: _self
-features:
-  - title: Your markup. Your rules of style.
-    details: Compose the complete experience in React or Astro. No embedded frame, mandatory components or injected CSS.
-    link: /contract
-    linkText: Understand the contract
-  - title: Give your agent the context.
-    details: Typed APIs, readable Markdown, a single context file and an optional installable skill. Same documentation, however you build.
-    link: /development
-    linkText: See the development tools
-  - title: Design without live data.
-    details: Switch between qualified, returning and recovery scenarios. The demo creates no leads and sends no email.
-    link: /playground/
-    target: _self
-    linkText: Try both designs
 ---
 
-## Add it to your website in one prompt
+<section class="prompt-hero" aria-labelledby="add-it-to-your-website-in-one-prompt">
 
-Copy this into your coding agent from your existing website project. It will use your site's design and start with safe demo data.
+<div class="prompt-intro">
+<p class="prompt-eyebrow">FS AI AGENCY <span>/</span> WEBSITE INTEGRATIONS</p>
+<h1 id="add-it-to-your-website-in-one-prompt">Add it to your website.<br><span>In one prompt.</span></h1>
+<p class="prompt-description">Open your website project. Give your agent the prompt. Make it yours.</p>
+</div>
 
 <div class="agent-prompt">
 
@@ -51,6 +25,10 @@ Make the demo work end to end, run the project's relevant checks, and show me th
 ```
 
 </div>
+
+<div class="prompt-steps"><span><b>01</b> Copy the prompt</span><span><b>02</b> Paste into your coding agent</span><span><b>03</b> Preview it in your site</span></div>
+
+</section>
 
 ## Install once. Make it your own.
 

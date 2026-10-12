@@ -1,3 +1,12 @@
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  src: url('https://fonts.gstatic.com/s/bricolagegrotesque/v9/3y9H6as8bTXq_nANBjzKo3IeZx8z6up5BeSl5jBNz_19PpbpMXuECpwUxJBOm_OJWiawDFXplDs.woff2')
+    format('woff2');
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+}
+
 :root {
   --agency-lime: #bdff00;
   --vp-c-brand-1: #456000;
@@ -93,20 +102,103 @@
 .VPHome {
   background: radial-gradient(ellipse at 78% 8%, #bdff001b, transparent 50%);
 }
+
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3,
+.VPNavBarTitle .title,
+.VPHero .name,
+.VPHero .text {
+  font-family: 'Bricolage Grotesque', var(--vp-font-family-base);
+}
+.prompt-hero {
+  padding: 64px 0 8px;
+}
+.prompt-intro {
+  text-align: center;
+  margin-bottom: 36px;
+}
+.prompt-intro .prompt-eyebrow {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  color: var(--vp-c-text-2);
+  margin: 0 0 22px;
+}
+.prompt-eyebrow span {
+  padding: 0 10px;
+  color: #a6aca0;
+}
+.prompt-intro h1 {
+  font-size: clamp(38px, 5.5vw, 68px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.05em;
+  margin: 0;
+  scroll-margin-top: 100px;
+}
+.prompt-intro h1 span {
+  display: inline-block;
+  padding: 0 0.14em 0.06em;
+  margin-top: 7px;
+  background: var(--agency-lime);
+  border-radius: 8px;
+}
+.prompt-intro .prompt-description {
+  color: var(--vp-c-text-2);
+  font-size: 17px;
+  line-height: 1.6;
+  margin: 22px 0 0;
+}
+.agent-prompt {
+  border: 1px solid #dbe0d1;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow:
+    0 20px 60px -24px #29351430,
+    0 2px 4px #29351405;
+  overflow: hidden;
+}
+.agent-prompt div[class*='language-'] {
+  position: relative;
+  background: transparent;
+  border-radius: 0;
+  margin: 0;
+}
+.agent-prompt div[class*='language-']::before {
+  content: 'PROMPT / EXISTING WEBSITE';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  color: #626871;
+  background: #f5f7f0;
+  border-bottom: 1px solid #e7ebdf;
+}
 .agent-prompt div[class*='language-'] > span.lang {
   display: none;
 }
 .agent-prompt div[class*='language-'] > button.copy {
-  width: 128px;
+  top: 15px;
+  right: 18px;
+  width: 136px;
   opacity: 1;
   background: var(--agency-lime);
   color: #0d1014;
+  border: 1px solid #a8e600;
   border-radius: 999px;
   font-size: 13px;
   font-weight: 650;
 }
 .agent-prompt button.copy::before {
-  content: 'Copy prompt';
+  content: 'Copy prompt ↗';
 }
 .agent-prompt button.copy.copied::before {
   content: 'Copied!';
@@ -115,10 +207,57 @@
   display: none;
 }
 .agent-prompt div[class*='language-'] pre {
-  padding-top: 68px;
+  padding: 94px 0 26px;
 }
-.agent-prompt pre code {
+.vp-doc .agent-prompt div[class*='language-'] pre code {
+  padding: 0 28px;
+  width: auto;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  line-height: 1.65;
+  line-height: 1.8;
+  font-size: 13px;
+  color: #384334;
+}
+.prompt-steps {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  padding: 22px 0;
+  color: var(--vp-c-text-2);
+  font-size: 12px;
+}
+.prompt-steps b {
+  font-family: 'Bricolage Grotesque', var(--vp-font-family-base);
+  margin-right: 7px;
+  color: #456000;
+}
+@media (max-width: 639px) {
+  .prompt-hero {
+    padding-top: 36px;
+  }
+  .prompt-intro .prompt-eyebrow {
+    font-size: 9px;
+    letter-spacing: 0.09em;
+  }
+  .prompt-intro .prompt-description {
+    font-size: 15px;
+  }
+  .agent-prompt div[class*='language-']::before {
+    padding: 0 16px;
+    font-size: 8px;
+  }
+  .agent-prompt div[class*='language-'] > button.copy {
+    right: 10px;
+    width: 110px;
+    font-size: 12px;
+  }
+  .vp-doc .agent-prompt div[class*='language-'] pre code {
+    padding: 0 18px;
+    font-size: 12px;
+  }
+  .prompt-steps {
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 8px;
+  }
 }
