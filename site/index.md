@@ -6,7 +6,7 @@ layout: home
 
 <div class="prompt-intro">
 <p class="prompt-eyebrow">FS AI AGENCY <span>/</span> WEBSITE INTEGRATIONS</p>
-<h1 id="add-it-to-your-website-in-one-prompt">Add it to your website.<br><span>In one prompt.</span></h1>
+<h1 id="add-it-to-your-website-in-one-prompt">Add the FSAi Funnel to a site<br><span>In one prompt.</span></h1>
 <p class="prompt-description">Open your website project. Give your agent the prompt. Make it yours.</p>
 </div>
 
