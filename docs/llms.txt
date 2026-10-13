@@ -1,11 +1,11 @@
 # FS Ai Agency website integrations
 
-> @franchiseai/website-integrations 0.1.0: headless qualification for React/Astro. The website owns all presentation.
+> @franchiseai/website-integrations 0.1.0: Funnel qualification for React/Astro. Repository-only Portal enrollment prototype; not in npm 0.1.0. The website owns all presentation.
 
-Start with getting started and the contract. Use the demo until a published live configuration is supplied. Preserve server decisions and optional consent. Never expose application credentials.
+First identify Funnel versus Portal from supplied configuration; ask if unclear. For Funnel, read getting started and the contract; use the demo until a published live configuration is supplied. For Portal, read portal.md and use only the repository prototype, preserving password signup with email confirmation and Google/LinkedIn alternatives. No live Portal adapter exists. Preserve server decisions and optional consent. Never expose application credentials.
 
 - [Get started](https://franchiseai.github.io/website-integrations/getting-started.md)
-- [Contract and presentation rules](https://franchiseai.github.io/website-integrations/contract.md)
+- [Funnel contract and presentation rules](https://franchiseai.github.io/website-integrations/contract.md)
 - [Portal brands · prototype](https://franchiseai.github.io/website-integrations/portal.md)
 - [Development workflow and agent tools](https://franchiseai.github.io/website-integrations/development.md)
 - [Connect a published funnel](https://franchiseai.github.io/website-integrations/going-live.md)
@@ -13,7 +13,8 @@ Start with getting started and the contract. Use the demo until a published live
 - [Maintaining and releasing](https://franchiseai.github.io/website-integrations/maintaining.md)
 
 - [Complete context](https://franchiseai.github.io/website-integrations/llms-full.txt)
-- [OpenAPI 3.1](https://franchiseai.github.io/website-integrations/openapi.json)
+- [Funnel OpenAPI 3.1](https://franchiseai.github.io/website-integrations/openapi.json)
+- [Portal OpenAPI draft — not deployed](https://franchiseai.github.io/website-integrations/portal-openapi.draft.json)
 - [Redoc reference](https://franchiseai.github.io/website-integrations/api.html)
 - [Playground](https://franchiseai.github.io/website-integrations/playground/)
 - [Example source](https://github.com/franchiseai/website-integrations/tree/main/examples/playground)

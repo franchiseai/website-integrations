@@ -1,6 +1,15 @@
 # Get started
 
-> For **Portal brands**, see the [Portal prototype guide](https://franchiseai.github.io/website-integrations/portal.html). It is repository-only and network-free; npm 0.1.0 supports Funnel brands.
+## Choose the brand type first
+
+| Brand type | Integration                                                                                                      | Where to start                                                                                       |
+| ---------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Funnel     | Headless qualification and secure continuation email; npm 0.1.0 includes demo and live adapters.                 | Follow the React/Astro setup below, then verify the customer's published Funnel configuration.       |
+| Portal     | Initial details, email/password or Google/LinkedIn, then hosted Portal continuation; repository-only simulation. | Follow the [Portal guide](portal.md). There is no live Portal adapter or Portal export in npm 0.1.0. |
+
+Use the supplied platform configuration to choose. If the brand type is unknown, ask before selecting an adapter. A custom website can use either journey; its appearance does not determine the platform brand type. The [landing-page prompt](https://franchiseai.github.io/website-integrations/) routes an agent through this choice.
+
+## Funnel: install the package
 
 Install the package in a React 19 project. For Astro, use a React island with Astro's React integration configured. The published package includes all required platform behavior; do not install the private platform SDK.
 
@@ -10,7 +19,7 @@ npm install @franchiseai/website-integrations react@^19 react-dom@^19
 
 ## Start with a complete example
 
-The [playground source](https://github.com/franchiseai/website-integrations/tree/main/examples/playground) contains a runnable Vite app and three designs. Its `QualificationForm.tsx` renders every phase, current question type, validation errors, keyboard controls, consent and outcomes. Copy it into your site as a starting point, or replace all its markup. No presentation components come from the integration package.
+The [playground source](https://github.com/franchiseai/website-integrations/tree/main/examples/playground) contains a runnable Vite app with three Funnel designs and a separate Portal prototype. The following setup is for Funnel brands. Its `QualificationForm.tsx` renders every phase, current question type, validation errors, keyboard controls, consent and outcomes. Copy it into your site as a starting point, or replace all its markup. No presentation components come from the integration package.
 
 After copying `QualificationForm.tsx` into your project, this wrapper is complete:
 

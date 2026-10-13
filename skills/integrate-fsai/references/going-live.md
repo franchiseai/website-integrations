@@ -1,5 +1,7 @@
 # Connect a published funnel
 
+> This guide covers **Funnel brands**. Portal enrollment uses a separate [experimental contract and password/provider flow](portal.md); npm 0.1.0 does not provide a live Portal integration.
+
 You need the platform API base URL, the customer’s published funnel slug (or configured funnel host), and the customer website’s origin permitted by backend CORS. These are configuration values, not administrator credentials. Obtain the values from your platform team rather than guessing production URLs.
 
 ```ts

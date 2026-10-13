@@ -1,12 +1,15 @@
 # FranchiseAI website integrations
 
-> For **Portal brands**, see the [Portal prototype guide](https://franchiseai.github.io/website-integrations/portal.html). It is repository-only and network-free; npm 0.1.0 supports Funnel brands.
+Headless website integrations for custom React and Astro sites. You own the HTML, CSS and interaction design.
 
-Headless franchise qualification for custom React and Astro websites. You own the HTML, CSS and interaction design; the integration manages validation, lead capture, page saves and server-controlled qualification.
+- **Funnel brands:** npm 0.1.0 includes qualification demo and live adapters, configured page saves and secure continuation email.
+- **Portal brands:** the repository includes an experimental enrollment demo with email/password, Google and LinkedIn, followed by a simulated hosted Portal handoff. It is not in npm 0.1.0 and has no live adapter. [Read the Portal guide](https://franchiseai.github.io/website-integrations/portal.html).
 
-**For developers:** [Read the docs](https://franchiseai.github.io/website-integrations/) · [Try the three designs](https://franchiseai.github.io/website-integrations/playground/)
+**For developers:** [Read the docs](https://franchiseai.github.io/website-integrations/) · [Try the playground](https://franchiseai.github.io/website-integrations/playground/)
 
 **For agents:** [Start here](https://franchiseai.github.io/website-integrations/llms.txt) · [Complete plain-text guide](https://franchiseai.github.io/website-integrations/llms-full.txt)
+
+For Funnel brands:
 
 ```sh
 npm install @franchiseai/website-integrations react@^19 react-dom@^19
@@ -14,9 +17,7 @@ npm install @franchiseai/website-integrations react@^19 react-dom@^19
 
 The package includes TypeScript declarations, a React hook, a framework-independent controller, a live adapter using the existing public platform API, and a separate network-free demo adapter. It has no UI, CSS, router, admin credentials or dependency on private packages. Version 0.1 is an initial qualification integration; live customer provisioning and email delivery must be verified for the target site.
 
-Give your coding agent this prompt:
-
-> Read https://franchiseai.github.io/website-integrations/llms-full.txt. Add a franchise enquiry to this website using @franchiseai/website-integrations. Use the demo adapter first, match our design, and handle every documented state. Use the example renderer as a reference, not a required layout. Do not connect a live funnel until I provide its published slug and API base URL.
+Give your coding agent the [one-shot prompt on the docs homepage](https://franchiseai.github.io/website-integrations/). It identifies Funnel versus Portal, preserves password capability for Portal, and routes to the supported package or repository prototype. The prompt uses the same [complete agent guide](https://franchiseai.github.io/website-integrations/llms-full.txt).
 
 An optional installable skill points to the same documentation:
 
@@ -32,6 +33,7 @@ The documentation uses **VitePress** for guides and **Redoc** for the API refere
 
 - [Get started with React or Astro](docs/getting-started.md)
 - [State, actions and design boundaries](docs/contract.md)
+- [Portal enrollment prototype](docs/portal.md)
 - [Demo scenarios and development tools](docs/development.md)
 - [Connect a published funnel](docs/going-live.md)
 - [Troubleshooting](docs/troubleshooting.md)
@@ -47,8 +49,8 @@ npm --prefix examples/playground install
 npm --prefix examples/playground run dev
 ```
 
-Open the URL printed by Vite. Common Table, Pulse and Outpost demonstrate three presentations of the same integration. Outpost starts with an interactive sample-territory map and opens qualification in a modal with the chosen place prefilled. All example submissions are simulated; no emails or leads are created. `examples/playground/src/QualificationForm.tsx` is a complete website-owned renderer that you can copy and restyle.
+Open the URL printed by Vite and choose Funnel or Portal. Portal offers Paper/Midnight with password/email and provider handoff simulations; its renderer is `examples/playground/src/PortalExperience.tsx`. Common Table, Pulse and Outpost demonstrate three presentations of the same integration. Outpost starts with an interactive sample-territory map and opens qualification in a modal with the chosen place prefilled. All example submissions are simulated; no emails or leads are created. `examples/playground/src/QualificationForm.tsx` is a complete website-owned renderer that you can copy and restyle.
 
-## Scope
+## Published npm 0.1.0 scope
 
-Qualification only. Sessions are held in memory. Continuation requests a secure email through the existing hosted funnel. No immediate authenticated redirect, file uploads, signing, booking, persistent browser session, or ad conversion delivery is included. The demo proves UI/controller behavior; it does not prove a customer’s live backend, CORS or email configuration.
+Funnel qualification only. Sessions are held in memory. Continuation requests a secure email through the existing hosted funnel. No immediate authenticated redirect, file uploads, signing, booking, persistent browser session, or ad conversion delivery is included. The demo proves UI/controller behavior; it does not prove a customer’s live backend, CORS or email configuration.

@@ -6,16 +6,16 @@ The development tools are ordinary code tools: TypeScript autocomplete, readable
 
 ## What a developer does
 
-1. Give the agent the docs URL or install the optional skill.
-2. Install the package in the customer website.
-3. Build the UI against demo data and the customer’s design system.
-4. Exercise every scenario and check keyboard/mobile behavior.
-5. Supply the platform API base URL and published funnel slug, then switch to the live adapter in a provisioned staging environment.
-6. Verify the live configuration and secure continuation email before shipping the website.
+1. Give the agent the [landing-page prompt](https://franchiseai.github.io/website-integrations/), docs URL or optional skill.
+2. Identify the platform brand type from the supplied configuration. Ask if it is unclear.
+3. For Funnel, install npm 0.1.0 and use its qualification demo. For Portal, use the [repository prototype](portal.md); the experimental Portal export is not in that npm release.
+4. Build fully custom UI against demo data and the customer's design system. Exercise the relevant scenarios and keyboard/mobile behavior.
+5. For Funnel, supply the API base URL and published funnel selector, then verify the live adapter in a provisioned staging environment, including CORS and secure continuation email.
+6. For Portal, keep the prototype network-free until the backend work and supported live release are delivered. Preserve password signup with email confirmation alongside Google/LinkedIn; the authenticated journey continues at the hosted Portal.
 
 ## Give an agent one document
 
-[llms-full.txt](https://franchiseai.github.io/website-integrations/llms-full.txt) contains the complete versioned guides without a JavaScript shell, navigation markup or a login. [llms.txt](https://franchiseai.github.io/website-integrations/llms.txt) is a short index. Each guide is also available as raw Markdown beside its rendered HTML. The package carries these Markdown guides for local/offline reading.
+[llms-full.txt](https://franchiseai.github.io/website-integrations/llms-full.txt) contains the complete versioned guides without a JavaScript shell, navigation markup or a login. [llms.txt](https://franchiseai.github.io/website-integrations/llms.txt) is a short index. Each guide is also available as raw Markdown beside its rendered HTML. Published packages carry the guide snapshot from their release. The latest web docs and repository also cover the experimental Portal prototype; those additions do not make it available in npm 0.1.0.
 
 For skill-aware agents:
 
@@ -25,7 +25,7 @@ npx skills add franchiseai/website-integrations --skill integrate-fsai
 
 The skill routes to bundled copies of these guides. It does not contain another implementation or a separate API contract.
 
-## Demo scenarios
+## Funnel demo scenarios
 
 ```ts
 import { createDemoQualificationAdapter } from '@franchiseai/website-integrations/demo';
@@ -47,19 +47,27 @@ const adapter = createDemoQualificationAdapter({
 
 Create a new controller to reset a scenario. `delayMs: 0` is useful in tests. Demo outcomes are selected by the scenario, not inferred from entered answers. Demo continuation simulates an accepted request; it sends no email.
 
-## Inspect behavior
+## Funnel behavior and events
 
 TypeScript describes the complete `QualificationState` and action surface. During local demo development, inspect `state.phase`, `pageIndex`, `fieldErrors` and `error`. Avoid recording live identity, answers or credentials in console logs, recordings or analytics. The controller intentionally keeps the application credential outside its public snapshot.
 
 `onEvent` supplies lifecycle names and page/node IDs. Use it for consent-aware measurement or a local event timeline. It supplies no answers or contact details; an event handler throwing cannot block submission. There is no automatic Google/Meta conversion delivery.
 
-The hosted playground has three design choices, scenario selectors and a reset button. Outpost adds map-prefilled answers and a dismissible qualification dialog; Common Table and Pulse embed the form inline. Changing designs preserves the current controller state. Those are demo controls, not production UI and not a requirement for agency sites.
+The hosted playground starts with a Funnel/Portal selector. Funnel has three design choices, scenario selectors and a reset button. Outpost adds map-prefilled answers and a dismissible qualification dialog; Common Table and Pulse embed the form inline. Changing designs preserves the current controller state. Those are demo controls, not production UI and not a requirement for agency sites.
 
-## Validate a custom design
+## Portal development
+
+Use the [Portal guide](portal.md) for the separate controller, hook, adapter and runnable example. Paper and Midnight share one enquiry state. Demo controls simulate an inbox, provider return and hosted Portal arrival; they never authenticate a person.
+
+Test password signup/confirmation, both providers, cancellation, email mismatch, returning applicants, expired links, unavailable access and save/account-request retries. Keep the password transient and use a throwaway value. Do not apply Funnel node/page semantics or SMS consent rules to a Portal intake. Keep the Portal's optional marketing consent separate and unchecked.
+
+The [Portal OpenAPI proposal](https://franchiseai.github.io/website-integrations/portal-openapi.draft.json) is a design artifact, separate from the supported Funnel spec. No endpoint is available just because it appears in the draft.
+
+## Validate a custom Funnel design
 
 Verify blank/invalid fields, both outcomes, returning visitors, save/progress/load retries, rapid double clicks, back navigation, email locking, unchecked SMS consent, and mobile layout. Preserve labels, legends, error associations, focus management and pending states. Keep consent beside the relevant phone field.
 
-The example repository includes Playwright tests for the three presentations. Run from its root after installing dependencies:
+The example repository includes Playwright tests for the three Funnel presentations and the Portal prototype. Run from its root after installing dependencies:
 
 ```sh
 npm --prefix examples/playground install

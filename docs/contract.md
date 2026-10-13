@@ -1,4 +1,6 @@
-# Contract and presentation rules
+# Funnel contract and presentation rules
+
+> This guide covers **Funnel brands**. Portal enrollment uses a separate [experimental contract and password/provider flow](portal.md); npm 0.1.0 does not provide a live Portal integration.
 
 The core is framework independent. `createQualificationController(options)` returns a subscribable controller. `useQualification(controller)` is only a React bridge: it subscribes and calls `load()` on mount. It returns `{ state, actions }`.
 
