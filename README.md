@@ -1,5 +1,7 @@
 # FranchiseAI website integrations
 
+> For **Portal brands**, see the [Portal prototype guide](https://franchiseai.github.io/website-integrations/portal.html). It is repository-only and network-free; npm 0.1.0 supports Funnel brands.
+
 Headless franchise qualification for custom React and Astro websites. You own the HTML, CSS and interaction design; the integration manages validation, lead capture, page saves and server-controlled qualification.
 
 **For developers:** [Read the docs](https://franchiseai.github.io/website-integrations/) · [Try the three designs](https://franchiseai.github.io/website-integrations/playground/)

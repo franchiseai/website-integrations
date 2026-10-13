@@ -6,6 +6,7 @@ Start with getting started and the contract. Use the demo until a published live
 
 - [Get started](https://franchiseai.github.io/website-integrations/getting-started.md)
 - [Contract and presentation rules](https://franchiseai.github.io/website-integrations/contract.md)
+- [Portal brands · prototype](https://franchiseai.github.io/website-integrations/portal.md)
 - [Development workflow and agent tools](https://franchiseai.github.io/website-integrations/development.md)
 - [Connect a published funnel](https://franchiseai.github.io/website-integrations/going-live.md)
 - [Troubleshooting](https://franchiseai.github.io/website-integrations/troubleshooting.md)

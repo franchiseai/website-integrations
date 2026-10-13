@@ -34,6 +34,7 @@ export default defineConfig({
           { text: 'Get started', link: '/getting-started' },
           { text: 'Contract & presentation', link: '/contract' },
           { text: 'Development tools', link: '/development' },
+          { text: 'Portal brands · Prototype', link: '/portal' },
           { text: 'Going live', link: '/going-live' },
           { text: 'Troubleshooting', link: '/troubleshooting' },
         ],

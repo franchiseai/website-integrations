@@ -1,0 +1,687 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "DRAFT \u2014 Portal website enrollment (not implemented)",
+    "version": "0.0.0-proposal",
+    "description": "Design proposal only. No live adapter or deployed endpoints exist. npm 0.1.0 supports Funnel only. Uses a non-routable .invalid server. Hosted email confirmation, OAuth callbacks and session redemption are intentionally outside this public website API and require separate reviewed auth contracts. The demo is network-free and is not an HTTP client for these paths. Never wire this proposal to legacy endpoints as a fallback."
+  },
+  "servers": [
+    {
+      "url": "https://portal-api.example.invalid",
+      "description": "Unimplemented design placeholder. Do not send requests."
+    }
+  ],
+  "tags": [
+    {
+      "name": "Portal enrollment proposal",
+      "description": "Proposed website-facing boundary; subject to backend review."
+    }
+  ],
+  "paths": {
+    "/portal-enrollment/brands/{slug}": {
+      "get": {
+        "tags": [
+          "Portal enrollment proposal"
+        ],
+        "operationId": "getPortalEnrollmentDefinitionDraft",
+        "summary": "Load a safe public signup definition",
+        "description": "Active Portal brands only; allowlist public fields and enabled identity methods. No private forms, applicant data or credentials. Registered origins are checked independently of capability authorization.",
+        "security": [],
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "description": "Public enabled Portal brand slug."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Allowlisted public definition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Definition"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Invalid"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unavailable"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "#/components/responses/Limited"
+          },
+          "503": {
+            "$ref": "#/components/responses/UnavailableService"
+          }
+        },
+        "x-status": "proposal"
+      }
+    },
+    "/portal-enrollment/brands/{slug}/intakes": {
+      "post": {
+        "tags": [
+          "Portal enrollment proposal"
+        ],
+        "operationId": "createPortalIntakeDraft",
+        "summary": "Create an isolated pending intake",
+        "description": "No existing applicant is read or modified by email. Validate schema version, limits, consent and origin server-side. Expire unverified PII; qualify according to actual configured rules.",
+        "security": [],
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "description": "Public enabled Portal brand slug."
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128
+            },
+            "description": "Unique action key; reuse for retries of the same payload. Server must scope it to the intake, operation and request identity; changed payloads conflict."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Intake"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "New or idempotently reused pending intake. Return Cache-Control: no-store.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntakeReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Invalid"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unavailable"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "#/components/responses/Limited"
+          },
+          "503": {
+            "$ref": "#/components/responses/UnavailableService"
+          }
+        },
+        "x-status": "proposal"
+      }
+    },
+    "/portal-enrollment/signup": {
+      "post": {
+        "tags": [
+          "Portal enrollment proposal"
+        ],
+        "operationId": "signupFromPortalIntakeDraft",
+        "summary": "Create a password account and request confirmation",
+        "description": "Pending-intake capability supplies identity/context. Does not attach data to an existing account without ownership proof. Enforce password policy and account/email idempotency. No website Portal session. Public outcome deliberately does not expose account existence; the prototype returning scenario is not an account lookup contract.",
+        "security": [
+          {
+            "PendingIntake": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128
+            },
+            "description": "Unique action key; reuse for retries of the same payload. Server must scope it to the intake, operation and request identity; changed payloads conflict."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted; no Portal session is returned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignupAccepted"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Invalid"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unavailable"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "#/components/responses/Limited"
+          },
+          "503": {
+            "$ref": "#/components/responses/UnavailableService"
+          }
+        },
+        "x-status": "proposal"
+      }
+    },
+    "/portal-enrollment/resend": {
+      "post": {
+        "tags": [
+          "Portal enrollment proposal"
+        ],
+        "operationId": "resendPortalConfirmationDraft",
+        "summary": "Request another confirmation email",
+        "description": "No password needed. Bound to the same pending intake; server cooldown, expiry and abuse checks. No passive email GET consumes proof; confirmation and one-use redemption occur on hosted Portal. No session response.",
+        "security": [
+          {
+            "PendingIntake": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128
+            },
+            "description": "Unique action key; reuse for retries of the same payload. Server must scope it to the intake, operation and request identity; changed payloads conflict."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted; no Portal session is returned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResendAccepted"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Invalid"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unavailable"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "#/components/responses/Limited"
+          },
+          "503": {
+            "$ref": "#/components/responses/UnavailableService"
+          }
+        },
+        "x-status": "proposal"
+      }
+    },
+    "/portal-enrollment/oauth": {
+      "post": {
+        "tags": [
+          "Portal enrollment proposal"
+        ],
+        "operationId": "startPortalOAuthDraft",
+        "summary": "Start Google or LinkedIn continuation",
+        "description": "Create a single-use server transaction bound to intake, brand, provider, browser initiation and approved destination. Server validates provider tokens and email proof at callback. Different/missing/unverified email never silently claims intake. Final session exists only at hosted Portal, never on customer website. Cancellation/expiry recovery and browser binding require review before implementation.",
+        "security": [
+          {
+            "PendingIntake": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128
+            },
+            "description": "Unique action key; reuse for retries of the same payload. Server must scope it to the intake, operation and request identity; changed payloads conflict."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OAuthRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted; no Portal session is returned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthStart"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Invalid"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unavailable"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "#/components/responses/Limited"
+          },
+          "503": {
+            "$ref": "#/components/responses/UnavailableService"
+          }
+        },
+        "x-status": "proposal"
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "PendingIntake": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Short-lived brand/purpose-bound pending-intake capability. NOT applicant authentication. Held only in adapter memory; protected against replay/abuse on the server. Never grants account read or mutation access."
+      }
+    },
+    "schemas": {
+      "Question": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "select"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "type",
+          "required"
+        ],
+        "description": "Prototype subset only. Final production contract must support reviewed allowlisted platform field types; reject unsupported forms rather than silently dropping questions."
+      },
+      "Definition": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schemaVersion": {
+            "type": "string"
+          },
+          "brandName": {
+            "type": "string"
+          },
+          "methods": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "email",
+                "google",
+                "linkedin"
+              ]
+            }
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Question"
+            }
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "brandName",
+          "methods",
+          "questions"
+        ]
+      },
+      "Intake": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schemaVersion": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "firstName": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "lastName": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "maxLength": 254
+              }
+            },
+            "required": [
+              "firstName",
+              "lastName",
+              "email"
+            ]
+          },
+          "answers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 2000
+            },
+            "maxProperties": 100
+          },
+          "marketingConsent": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "contact",
+          "answers",
+          "marketingConsent"
+        ]
+      },
+      "IntakeReceipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "intakeCapability": {
+            "type": "string",
+            "description": "Opaque limited capability, NOT an applicant session. The adapter retains it only in memory and uses it in Authorization for draft actions. Do not log, persist or put in URLs."
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "qualified": {
+            "type": "boolean",
+            "description": "Advisory in the demo. Live behavior must preserve configured Portal rules."
+          }
+        },
+        "required": [
+          "intakeCapability",
+          "expiresAt",
+          "qualified"
+        ]
+      },
+      "SignupRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "password": {
+            "type": "string",
+            "minLength": 10,
+            "writeOnly": true,
+            "description": "Transient password. Enforce the platform password policy server-side; never store in intake, logs, analytics or response. Maximum length follows the approved password service policy."
+          }
+        },
+        "required": [
+          "password"
+        ]
+      },
+      "SignupAccepted": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "check_email_or_continue_at_portal"
+            ],
+            "description": "Enumeration-resistant response. Do not reveal whether this address already has an account. Hosted login/recovery and email copy handle the appropriate path."
+          },
+          "retryAfterSeconds": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "portalUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Registered canonical hosted Portal entry only. No session credential, PII or arbitrary return destination."
+          }
+        },
+        "required": [
+          "status",
+          "retryAfterSeconds",
+          "portalUrl"
+        ]
+      },
+      "ResendAccepted": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "accepted"
+            ]
+          },
+          "retryAfterSeconds": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "status",
+          "retryAfterSeconds"
+        ]
+      },
+      "OAuthRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "type": "string",
+            "enum": [
+              "google",
+              "linkedin"
+            ]
+          }
+        },
+        "required": [
+          "provider"
+        ]
+      },
+      "OAuthStart": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "authorizationUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Backend-generated approved provider URL with a short-lived opaque transaction reference, PKCE/nonce as applicable. No intake PII, password or Portal session. Never accept arbitrary redirect URLs from a caller."
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "authorizationUrl",
+          "expiresAt"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "invalid_request",
+              "intake_unavailable",
+              "conflict",
+              "rate_limited",
+              "temporarily_unavailable"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "description": "Safe user-facing message with no credentials or account-existence details."
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      }
+    },
+    "responses": {
+      "Invalid": {
+        "description": "Invalid fields or request.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Unavailable": {
+        "description": "Intake, origin or brand unavailable. No account status disclosed.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "description": "Expired schema or conflicting idempotency payload.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Limited": {
+        "description": "Rate limited; obey Retry-After.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "headers": {
+          "Retry-After": {
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Seconds until another attempt is permitted."
+          }
+        }
+      },
+      "UnavailableService": {
+        "description": "Temporary service failure. Retry safely with the same idempotency key.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+}

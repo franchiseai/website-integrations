@@ -26,3 +26,24 @@ assert.equal(controller.getSnapshot().outcome, 'qualified');
 await controller.continue();
 assert.equal(controller.getSnapshot().phase, 'complete');
 console.log('Packed integration: demo qualification and continuation passed.');
+
+const { createPortalEnrollmentController, createDemoPortalEnrollmentAdapter } =
+  await import('../dist/portal-demo.js');
+const portalDemo = createDemoPortalEnrollmentAdapter({ delayMs: 0 });
+const portal = createPortalEnrollmentController(portalDemo.adapter);
+await portal.load();
+portal.setContact('firstName', 'Demo');
+portal.setContact('lastName', 'Applicant');
+portal.setContact('email', 'demo@example.com');
+portal.setAnswer('market', 'London');
+portal.setAnswer('timing', 'Within 6 months');
+await portal.submit();
+await portal.signUp('DemoPassword!42');
+assert.equal(portal.getSnapshot().phase, 'email_pending');
+assert.equal(
+  JSON.stringify(portal.getSnapshot()).includes('DemoPassword!42'),
+  false
+);
+assert.equal((await portalDemo.simulateVerification()).kind, 'ready');
+assert.equal(portal.getSnapshot().phase, 'email_pending');
+console.log('Repository Portal prototype: password/email simulation passed.');

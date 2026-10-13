@@ -49,3 +49,9 @@ npx skills add franchiseai/website-integrations --skill integrate-fsai
 The [OpenAPI 3.1 document](/openapi.json) and <a href="/website-integrations/api.html" target="_self">Redoc API reference</a> describe the existing public HTTP endpoints. Website developers should generally use the package rather than reimplementing the workflow.
 
 Version 0.1 covers qualification and secure email continuation. Enquiries are held in memory; provision and verify the customer’s live configuration before shipping. [Read the scope and boundaries](contract.md).
+
+## Portal brands, too.
+
+Explore [the Portal enrollment prototype](/playground/?flow=portal): custom initial details, email/password or Google/LinkedIn, then a simulated handoff to the hosted Applicant Portal. Try two designs using the same headless integration.
+
+[Read the Portal guide](portal.md) for the flow, agent prompt and backend requirements. This is a repository-only demo; npm 0.1.0 and the live integration still cover Funnel brands.

@@ -1,5 +1,7 @@
 # Get started
 
+> For **Portal brands**, see the [Portal prototype guide](https://franchiseai.github.io/website-integrations/portal.html). It is repository-only and network-free; npm 0.1.0 supports Funnel brands.
+
 Install the package in a React 19 project. For Astro, use a React island with Astro's React integration configured. The published package includes all required platform behavior; do not install the private platform SDK.
 
 ```sh

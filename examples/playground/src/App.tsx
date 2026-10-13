@@ -10,6 +10,7 @@ import {
 } from '@franchiseai/website-integrations/demo';
 import type { DemoScenario } from '@franchiseai/website-integrations/demo';
 import { QualificationForm } from './QualificationForm';
+import { PortalStudio } from './PortalExperience';
 import { OutpostExperience } from './OutpostExperience';
 
 type Design = 'table' | 'pulse' | 'outpost';
@@ -323,5 +324,38 @@ function Experience({
 
 export function App() {
   const [scenario, setScenario] = useState<DemoScenario>('qualified');
-  return <Studio scenario={scenario} onScenario={setScenario} />;
+  const [flow, setFlow] = useState(() =>
+    new URLSearchParams(window.location.search).get('flow') === 'portal'
+      ? 'portal'
+      : 'funnel'
+  );
+  const changeFlow = (next: 'portal' | 'funnel') => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('flow', next);
+    window.history.replaceState(null, '', url);
+    setFlow(next);
+  };
+  return (
+    <>
+      <div className="flow-selector" role="group" aria-label="Integration type">
+        <button
+          aria-pressed={flow === 'funnel'}
+          onClick={() => changeFlow('funnel')}
+        >
+          Funnel brands
+        </button>
+        <button
+          aria-pressed={flow === 'portal'}
+          onClick={() => changeFlow('portal')}
+        >
+          Portal brands · Prototype
+        </button>
+      </div>
+      {flow === 'portal' ? (
+        <PortalStudio />
+      ) : (
+        <Studio scenario={scenario} onScenario={setScenario} />
+      )}
+    </>
+  );
 }

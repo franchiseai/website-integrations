@@ -7,6 +7,7 @@ const manifest = JSON.parse(await readFile('package.json', 'utf8'));
 const topics = [
   'getting-started',
   'contract',
+  'portal',
   'development',
   'going-live',
   'troubleshooting',
@@ -28,6 +29,7 @@ for (const guide of guides) {
   );
 }
 await cp('openapi.json', 'site/public/openapi.json');
+await cp('portal-openapi.draft.json', 'site/public/portal-openapi.draft.json');
 await writeFile('site/public/.nojekyll', '');
 await writeFile(
   'site/public/llms.txt',
@@ -50,6 +52,20 @@ execFileSync(
   ],
   { stdio: 'inherit' }
 );
+execFileSync(cli('redocly'), ['lint', 'portal-openapi.draft.json'], {
+  stdio: 'inherit',
+});
+execFileSync(
+  cli('redocly'),
+  [
+    'build-docs',
+    'portal-openapi.draft.json',
+    '--output',
+    'site/public/portal-api.draft.html',
+    '--disableGoogleFont',
+  ],
+  { stdio: 'inherit' }
+);
 execFileSync(cli('vitepress'), ['build', 'site'], { stdio: 'inherit' });
 for (const guide of guides)
   await writeFile(`docs/${guide.slug}.md`, guide.markdown);
@@ -58,6 +74,9 @@ for (const required of [
   'index.html',
   'getting-started.html',
   'api.html',
+  'portal.html',
+  'portal-api.draft.html',
+  'portal-openapi.draft.json',
   'openapi.json',
   'llms.txt',
   'llms-full.txt',
