@@ -43,8 +43,8 @@ export default defineConfig({
         text: 'REFERENCE',
         items: [
           { text: 'OpenAPI reference ↗', link: '/api.html', target: '_self' },
-          { text: 'Download OpenAPI', link: '/openapi.json', target: '_self' },
-          { text: 'Agent context ↗', link: '/llms-full.txt', target: '_self' },
+          { text: 'Download OpenAPI', link: '/website-integrations/openapi.json', target: '_self' },
+          { text: 'Agent context ↗', link: '/website-integrations/llms-full.txt', target: '_self' },
           { text: 'Maintaining & releasing', link: '/maintaining' },
         ],
       },
