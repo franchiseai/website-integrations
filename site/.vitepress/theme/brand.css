@@ -204,6 +204,30 @@
 .agent-prompt button.copy.copied::before {
   content: 'Copied!';
 }
+.vp-doc .agent-prompt div[class*='language-'] > button.copy:hover,
+.vp-doc .agent-prompt div[class*='language-'] > button.copy.copied,
+.vp-doc .agent-prompt div[class*='language-'] > button.copy:hover.copied {
+  background: var(--agency-lime);
+  border-color: #a8e600;
+  border-radius: 999px;
+}
+.vp-doc .agent-prompt div[class*='language-'] > button.copy.copied::before,
+.vp-doc
+  .agent-prompt
+  div[class*='language-']
+  > button.copy:hover.copied::before {
+  content: 'Copied!';
+  position: static;
+  transform: none;
+  display: inline;
+  border: 0;
+  padding: 0;
+  width: auto;
+  height: auto;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+}
 .agent-prompt button.copy::after {
   display: none;
 }
