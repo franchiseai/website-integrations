@@ -1,6 +1,6 @@
 {
   "name": "@franchiseai/website-integrations",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
   "type": "module",
   "files": [
@@ -24,6 +24,14 @@
     "./experimental/portal": {
       "types": "./dist/portal-demo.d.ts",
       "import": "./dist/portal-demo.js"
+    },
+    "./offerings": {
+      "types": "./dist/offerings.d.ts",
+      "import": "./dist/offerings.js"
+    },
+    "./offerings/demo": {
+      "types": "./dist/offerings-demo.d.ts",
+      "import": "./dist/offerings-demo.js"
     }
   },
   "scripts": {
@@ -44,7 +52,7 @@
     "@redocly/cli": "2.62.1"
   },
   "sideEffects": false,
-  "description": "Headless franchise qualification for custom React and Astro websites",
+  "description": "Headless website integrations for franchise qualification and consumer service enquiries",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "license": "UNLICENSED",

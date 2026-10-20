@@ -35,6 +35,7 @@ export default defineConfig({
           { text: 'Contract & presentation', link: '/contract' },
           { text: 'Development tools', link: '/development' },
           { text: 'Portal brands · Prototype', link: '/portal' },
+          { text: 'Offerings · Consumer enquiries', link: '/offerings' },
           { text: 'Going live', link: '/going-live' },
           { text: 'Troubleshooting', link: '/troubleshooting' },
         ],
@@ -57,7 +58,7 @@ export default defineConfig({
     ],
     footer: {
       message: 'Your design. Connected to FranchiseAI.',
-      copyright: 'FS Ai Agency · Website integrations v0.1.0',
+      copyright: 'FS Ai Agency · Website integrations v0.2.0 release candidate',
     },
     outline: { level: [2, 3] },
   },

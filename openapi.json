@@ -38,6 +38,10 @@
     {
       "name": "Continuation",
       "description": "Record progress and resolve the hosted continuation."
+    },
+    {
+      "name": "Offerings",
+      "description": "Consumer service enquiries. Public, no credentials; requires a provisioned brand and allowed agency origin. Release candidate, verify deployment before use."
     }
   ],
   "paths": {
@@ -46,7 +50,9 @@
         "operationId": "getQualificationSite",
         "summary": "Resolve a published funnel",
         "description": "Returns null with HTTP 200 when no site matches. The headless adapter requires a published funnel with a qualifier entry.",
-        "tags": ["Configuration"],
+        "tags": [
+          "Configuration"
+        ],
         "security": [],
         "requestBody": {
           "required": true,
@@ -133,7 +139,9 @@
         "operationId": "getQualificationForm",
         "summary": "Read the configured form",
         "description": "Returns the configured form for this host/slug and kind, or null when unset/unavailable. A configured missing qualifier form is a load error in the headless adapter.",
-        "tags": ["Configuration"],
+        "tags": [
+          "Configuration"
+        ],
         "security": [],
         "requestBody": {
           "required": true,
@@ -158,7 +166,9 @@
                         "description": "The website integration uses qualifier. Other values belong to the hosted flow."
                       }
                     },
-                    "required": ["kind"]
+                    "required": [
+                      "kind"
+                    ]
                   }
                 ]
               }
@@ -240,7 +250,9 @@
         "operationId": "createQualificationLead",
         "summary": "Start an enquiry or request secure continuation",
         "description": "For a new visitor, creates a lead and returns its opaque credential. For a returning email, returns resume_link_sent without a credential. That response is identical if delivery is suppressed, throttled or fails; it is not a delivery receipt. The integration reuses this endpoint for secure email continuation.",
-        "tags": ["Qualification"],
+        "tags": [
+          "Qualification"
+        ],
         "security": [],
         "requestBody": {
           "required": true,
@@ -330,7 +342,9 @@
         "operationId": "updateQualificationLead",
         "summary": "Update captured contact details",
         "description": "Only permitted lead fields are updated. The application must belong to a live funnel. The headless integration updates names and phone; email stays locked after creation.",
-        "tags": ["Qualification"],
+        "tags": [
+          "Qualification"
+        ],
         "security": [],
         "requestBody": {
           "required": true,
@@ -354,7 +368,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["applicationId"]
+                  "required": [
+                    "applicationId"
+                  ]
                 }
               }
             }
@@ -427,7 +443,9 @@
         "operationId": "submitQualificationPage",
         "summary": "Save a configured form page",
         "description": "Preserve configured field IDs and choices. pageId scopes validation to the configured page; complete marks its final submission. The server evaluates qualification. An absent qualified flag is treated as qualified by the current hosted/headless behavior.",
-        "tags": ["Qualification"],
+        "tags": [
+          "Qualification"
+        ],
         "security": [],
         "requestBody": {
           "required": true,
@@ -507,7 +525,9 @@
         "operationId": "recordQualificationProgress",
         "summary": "Record a completed funnel step",
         "description": "Records a completed step for server-side replay. After a final save, retry this phase on failure without resubmitting answered questions.",
-        "tags": ["Continuation"],
+        "tags": [
+          "Continuation"
+        ],
         "security": [],
         "requestBody": {
           "required": true,
@@ -524,11 +544,18 @@
                   },
                   "outcome": {
                     "type": "string",
-                    "examples": ["qualified", "not_qualified"],
+                    "examples": [
+                      "qualified",
+                      "not_qualified"
+                    ],
                     "description": "Use the server result. This integration records qualified or not_qualified."
                   }
                 },
-                "required": ["applicationId", "nodeId", "outcome"]
+                "required": [
+                  "applicationId",
+                  "nodeId",
+                  "outcome"
+                ]
               }
             }
           }
@@ -546,7 +573,9 @@
                       "const": true
                     }
                   },
-                  "required": ["ok"]
+                  "required": [
+                    "ok"
+                  ]
                 }
               }
             }
@@ -608,7 +637,9 @@
         "operationId": "resolveQualificationEntry",
         "summary": "Resolve the next funnel node",
         "description": "Resolves the next node from the published flow and recorded progress. The returned ID is metadata, not an authenticated redirect URL.",
-        "tags": ["Continuation"],
+        "tags": [
+          "Continuation"
+        ],
         "security": [],
         "requestBody": {
           "required": true,
@@ -621,7 +652,9 @@
                     "type": "string"
                   }
                 },
-                "required": ["applicationId"]
+                "required": [
+                  "applicationId"
+                ]
               }
             }
           }
@@ -638,11 +671,20 @@
                       "type": "string"
                     },
                     "lane": {
-                      "type": ["string", "null"],
-                      "enum": ["qualified", "notQualified", null]
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "enum": [
+                        "qualified",
+                        "notQualified",
+                        null
+                      ]
                     }
                   },
-                  "required": ["entryNodeId"]
+                  "required": [
+                    "entryNodeId"
+                  ]
                 }
               }
             }
@@ -698,6 +740,462 @@
           }
         }
       }
+    },
+    "/offerings/public/locations": {
+      "post": {
+        "operationId": "offerings_locations",
+        "tags": [
+          "Offerings"
+        ],
+        "summary": "List deliberately public location profiles",
+        "description": "Explicit eligible location selection takes precedence. Ambiguous address routing goes to head office. Never send platform admin credentials. See the Offerings guide for retry and release rules.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "brandId": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                },
+                "required": [
+                  "brandId"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Published result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OfferingPublicLocation"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or answers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin is not configured for this brand",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Brand or publication unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Form or destination changed, or idempotency key reused with changed content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded; respect Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/offerings/public/offerings": {
+      "post": {
+        "operationId": "offerings_offerings",
+        "tags": [
+          "Offerings"
+        ],
+        "summary": "List enabled named consumer services",
+        "description": "Explicit eligible location selection takes precedence. Ambiguous address routing goes to head office. Never send platform admin credentials. See the Offerings guide for retry and release rules.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "brandId": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                },
+                "required": [
+                  "brandId"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Published result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OfferingSummary"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or answers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin is not configured for this brand",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Brand or publication unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Form or destination changed, or idempotency key reused with changed content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded; respect Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/offerings/public/resolve": {
+      "post": {
+        "operationId": "offerings_resolve",
+        "tags": [
+          "Offerings"
+        ],
+        "summary": "Resolve routing and the effective enquiry form",
+        "description": "Explicit eligible location selection takes precedence. Ambiguous address routing goes to head office. Never send platform admin credentials. See the Offerings guide for retry and release rules.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfferingResolve"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Published result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingDefinition"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or answers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin is not configured for this brand",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Brand or publication unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Form or destination changed, or idempotency key reused with changed content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded; respect Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/offerings/public/submit": {
+      "post": {
+        "operationId": "offerings_submit",
+        "tags": [
+          "Offerings"
+        ],
+        "summary": "Persist one idempotent consumer enquiry",
+        "description": "Explicit eligible location selection takes precedence. Ambiguous address routing goes to head office. Never send platform admin credentials. See the Offerings guide for retry and release rules.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfferingSubmit"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Durably received; not a booking or proof of email delivery",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or answers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin is not configured for this brand",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Brand or publication unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Form or destination changed, or idempotency key reused with changed content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded; respect Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/offerings/public/location": {
+      "post": {
+        "operationId": "offeringsPublicLocation",
+        "tags": [
+          "Offerings"
+        ],
+        "summary": "Read one published public location",
+        "description": "Explicit eligible location selection takes precedence. Ambiguous address routing goes to head office. Never send platform admin credentials. See the Offerings guide for retry and release rules.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "brandId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "locationId": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                },
+                "required": [
+                  "brandId",
+                  "locationId"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Published result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingPublicLocation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or answers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin is not configured for this brand",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Brand or publication unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Form or destination changed, or idempotency key reused with changed content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded; respect Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferingError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -718,10 +1216,14 @@
         },
         "anyOf": [
           {
-            "required": ["slug"]
+            "required": [
+              "slug"
+            ]
           },
           {
-            "required": ["host"]
+            "required": [
+              "host"
+            ]
           }
         ]
       },
@@ -735,7 +1237,10 @@
             "type": "string"
           },
           "domain": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "name": {
             "type": "string"
@@ -744,10 +1249,16 @@
             "type": "boolean"
           },
           "qualifierFormId": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "applicationFormId": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "funnelDoc": {
             "anyOf": [
@@ -760,7 +1271,11 @@
             ]
           }
         },
-        "required": ["brandId", "slug", "qualifierFormId"],
+        "required": [
+          "brandId",
+          "slug",
+          "qualifierFormId"
+        ],
         "description": "Fields consumed by the qualification integration. Other site metadata is permitted."
       },
       "PublishedFunnel": {
@@ -784,14 +1299,22 @@
                       "type": "string"
                     }
                   },
-                  "required": ["type"]
+                  "required": [
+                    "type"
+                  ]
                 }
               },
-              "required": ["id", "config"]
+              "required": [
+                "id",
+                "config"
+              ]
             }
           }
         },
-        "required": ["entryStepId", "nodes"]
+        "required": [
+          "entryStepId",
+          "nodes"
+        ]
       },
       "Question": {
         "type": "object",
@@ -817,28 +1340,49 @@
             ]
           },
           "question": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "name": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "required": {
-            "type": ["boolean", "null"]
+            "type": [
+              "boolean",
+              "null"
+            ]
           },
           "options": {
-            "type": ["array", "null"],
+            "type": [
+              "array",
+              "null"
+            ],
             "items": {
               "type": "string"
             }
           },
           "dataLocation": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "description": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
-        "required": ["id", "type"],
+        "required": [
+          "id",
+          "type"
+        ],
         "description": "Fields consumed by the integration. Additional platform metadata may be present."
       },
       "FormPage": {
@@ -848,10 +1392,16 @@
             "type": "string"
           },
           "title": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "subtitle": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "fields": {
             "type": "array",
@@ -860,7 +1410,10 @@
             }
           }
         },
-        "required": ["id", "fields"]
+        "required": [
+          "id",
+          "fields"
+        ]
       },
       "Form": {
         "type": "object",
@@ -875,7 +1428,10 @@
             }
           }
         },
-        "required": ["id", "pages"],
+        "required": [
+          "id",
+          "pages"
+        ],
         "description": "Configured form; extra platform metadata may be present."
       },
       "CreateLeadRequest": {
@@ -915,7 +1471,12 @@
             "description": "Explicit opt-in only. The integration sends consent beside its configured phone page via submissions."
           }
         },
-        "required": ["brandId", "firstName", "lastName", "email"]
+        "required": [
+          "brandId",
+          "firstName",
+          "lastName",
+          "email"
+        ]
       },
       "CreateLeadResponse": {
         "oneOf": [
@@ -931,7 +1492,10 @@
                 "description": "Opaque application credential. Keep in memory; never place in browser navigation links, page HTML or analytics."
               }
             },
-            "required": ["status", "applicationId"]
+            "required": [
+              "status",
+              "applicationId"
+            ]
           },
           {
             "type": "object",
@@ -941,7 +1505,9 @@
                 "const": "resume_link_sent"
               }
             },
-            "required": ["status"]
+            "required": [
+              "status"
+            ]
           }
         ]
       },
@@ -993,7 +1559,12 @@
           },
           "kind": {
             "type": "string",
-            "enum": ["qualifier", "application", "compliance", "fddRequest"],
+            "enum": [
+              "qualifier",
+              "application",
+              "compliance",
+              "fddRequest"
+            ],
             "description": "The website integration uses qualifier. Other values belong to the hosted flow."
           },
           "submissions": {
@@ -1027,7 +1598,10 @@
                   ]
                 }
               },
-              "required": ["fieldId", "value"]
+              "required": [
+                "fieldId",
+                "value"
+              ]
             }
           },
           "pageId": {
@@ -1042,7 +1616,10 @@
             "description": "Affirmative opt-in for the phone field on this page; never preselect."
           }
         },
-        "required": ["applicationId", "kind"]
+        "required": [
+          "applicationId",
+          "kind"
+        ]
       },
       "SubmitPageResponse": {
         "type": "object",
@@ -1094,17 +1671,390 @@
                 },
                 "code": {
                   "type": "string",
-                  "enum": ["required", "type", "option", "min"]
+                  "enum": [
+                    "required",
+                    "type",
+                    "option",
+                    "min"
+                  ]
                 },
                 "message": {
                   "type": "string"
                 }
               },
-              "required": ["fieldId", "code", "message"]
+              "required": [
+                "fieldId",
+                "code",
+                "message"
+              ]
             }
           }
         },
-        "required": ["message"]
+        "required": [
+          "message"
+        ]
+      },
+      "OfferingContact": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "phone"
+        ],
+        "additionalProperties": false
+      },
+      "OfferingField": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "textarea",
+              "number",
+              "date",
+              "select",
+              "checkbox"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "order": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "type",
+          "required",
+          "options",
+          "order"
+        ],
+        "additionalProperties": false
+      },
+      "OfferingForm": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfferingField"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "fields"
+        ],
+        "additionalProperties": false
+      },
+      "OfferingAddress": {
+        "type": "object",
+        "properties": {
+          "address1": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string",
+            "enum": [
+              "CA",
+              "US"
+            ]
+          }
+        },
+        "required": [
+          "address1",
+          "city",
+          "state",
+          "postalCode",
+          "country"
+        ],
+        "additionalProperties": false
+      },
+      "OfferingProfile": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "address1": {
+            "type": "string"
+          },
+          "address2": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "address1",
+          "address2",
+          "city",
+          "state",
+          "postalCode",
+          "country",
+          "phone",
+          "email",
+          "website"
+        ],
+        "additionalProperties": false
+      },
+      "OfferingPublicLocation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/OfferingProfile"
+          },
+          "intakeEnabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "profile",
+          "intakeEnabled"
+        ],
+        "additionalProperties": false
+      },
+      "OfferingSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "OfferingDefinition": {
+        "type": "object",
+        "properties": {
+          "offering": {
+            "$ref": "#/components/schemas/OfferingSummary"
+          },
+          "locationId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "form": {
+            "$ref": "#/components/schemas/OfferingForm"
+          },
+          "version": {
+            "type": "string",
+            "description": "Opaque effective form and eligibility version; return unchanged at submission."
+          }
+        },
+        "required": [
+          "offering",
+          "locationId",
+          "form",
+          "version"
+        ],
+        "additionalProperties": false
+      },
+      "OfferingResolve": {
+        "type": "object",
+        "properties": {
+          "brandId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "offeringId": {
+            "type": "string"
+          },
+          "locationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "address": {
+            "$ref": "#/components/schemas/OfferingAddress"
+          }
+        },
+        "required": [
+          "brandId",
+          "offeringId"
+        ],
+        "additionalProperties": false
+      },
+      "OfferingSubmit": {
+        "type": "object",
+        "properties": {
+          "brandId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "offeringId": {
+            "type": "string"
+          },
+          "locationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "address": {
+            "$ref": "#/components/schemas/OfferingAddress"
+          },
+          "version": {
+            "type": "string"
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "format": "uuid",
+            "description": "A new UUID for a new enquiry. Retain exactly the same payload and key after an uncertain response."
+          },
+          "contact": {
+            "$ref": "#/components/schemas/OfferingContact"
+          },
+          "answers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ]
+            }
+          }
+        },
+        "required": [
+          "brandId",
+          "offeringId",
+          "version",
+          "idempotencyKey",
+          "contact",
+          "answers"
+        ],
+        "additionalProperties": false
+      },
+      "OfferingReceipt": {
+        "type": "object",
+        "properties": {
+          "receiptId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "const": "received"
+          }
+        },
+        "required": [
+          "receiptId",
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "OfferingError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "OFFERING_CHANGED",
+                  "LOCATION_UNAVAILABLE",
+                  "OFFERING_UNAVAILABLE",
+                  "INVALID_ANSWERS",
+                  "IDEMPOTENCY_CONFLICT"
+                ]
+              },
+              "fieldErrors": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

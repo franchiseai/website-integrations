@@ -7,7 +7,7 @@ layout: home
 <div class="prompt-intro">
 <p class="prompt-eyebrow">FS AI AGENCY <span>/</span> WEBSITE INTEGRATIONS</p>
 <h1 id="add-it-to-your-website-in-one-prompt">Add FSAi to a site<br><span>In one prompt.</span></h1>
-<p class="prompt-description">Funnel or Portal. Your site, your design. Give your agent the prompt.</p>
+<p class="prompt-description">Funnel, Portal or consumer Offerings. Your site, your design. Give your agent the prompt.</p>
 </div>
 
 <div class="agent-prompt">
@@ -16,6 +16,8 @@ layout: home
 Add a FranchiseAI enquiry flow to this existing website.
 
 Read https://franchiseai.github.io/website-integrations/llms-full.txt and inspect this project's framework, routes and design system. Identify whether this is a Funnel brand or a Portal brand from the supplied configuration; ask me if it is unclear. Check React 19 compatibility without silently upgrading the site's framework.
+
+For consumer service enquiries: read https://franchiseai.github.io/website-integrations/offerings.md and use the Offerings controller, live adapter and demo exports from the 0.2.0 release candidate. Preserve exact request keys on uncertain retries and reload forms only after a confirmed stale-form refusal. Use the demo until the platform and package are provisioned.
 
 For a Funnel brand: use @franchiseai/website-integrations with its demo adapter and documented qualification controller/hook. Preserve published questions, validation, optional SMS consent, server-controlled outcomes and secure email continuation. Test new and returning visitors, both outcomes, loading failures and save/progress retries.
 

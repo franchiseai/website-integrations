@@ -1,6 +1,12 @@
 # Get started
 
-## Choose the brand type first
+## Consumer enquiry or franchise recruitment?
+
+For a customer asking about property management, catering or another service, use [Offerings](offerings.md). The 0.2.0 release candidate includes public location discovery, effective forms and durable enquiry submission; the playground's `?offerings` route shows two website-owned presentations. Confirm deployment and publication before a live launch.
+
+The Funnel/Portal choice below applies to **franchise recruitment**, a separate journey. Consumer Offerings does not sign a visitor up as an applicant.
+
+## Recruitment: choose the brand type
 
 | Brand type | Integration                                                                                                      | Where to start                                                                                       |
 | ---------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |

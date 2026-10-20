@@ -2,6 +2,7 @@
 
 Headless website integrations for custom React and Astro sites. You own the HTML, CSS and interaction design.
 
+- **Consumer Offerings:** 0.2.0 adds public location profiles, effective enquiry forms and durable submission through `/offerings` and `/offerings/demo`. This is a release candidate pending deployment and publication verification. [Read the Offerings guide](docs/offerings.md).
 - **Funnel brands:** npm 0.1.0 includes qualification demo and live adapters, configured page saves and secure continuation email.
 - **Portal brands:** the repository includes an experimental enrollment demo with email/password, Google and LinkedIn, followed by a simulated hosted Portal handoff. It is not in npm 0.1.0 and has no live adapter. [Read the Portal guide](https://franchiseai.github.io/website-integrations/portal.html).
 
@@ -54,3 +55,7 @@ Open the URL printed by Vite and choose Funnel or Portal. Portal offers Paper/Mi
 ## Published npm 0.1.0 scope
 
 Funnel qualification only. Sessions are held in memory. Continuation requests a secure email through the existing hosted funnel. No immediate authenticated redirect, file uploads, signing, booking, persistent browser session, or ad conversion delivery is included. The demo proves UI/controller behavior; it does not prove a customer’s live backend, CORS or email configuration.
+
+## Offerings consumer enquiries (0.2.0 release candidate)
+
+See [the Offerings guide](docs/offerings.md) for the headless controller, live adapter, deterministic demo scenarios and rollout verification. Existing Funnel and experimental Portal exports are preserved.

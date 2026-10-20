@@ -47,3 +47,13 @@ assert.equal(
 assert.equal((await portalDemo.simulateVerification()).kind, 'ready');
 assert.equal(portal.getSnapshot().phase, 'email_pending');
 console.log('Repository Portal prototype: password/email simulation passed.');
+
+const {createOfferingsController}=await import('../dist/offerings.js');
+const {createDemoOfferingsAdapter}=await import('../dist/offerings-demo.js');
+const offerings=createOfferingsController(createDemoOfferingsAdapter({scenario:'retry'}));
+await offerings.load();await offerings.choose({offeringId:'property',locationId:'location-1'});
+offerings.contact({name:'Demo',email:'demo@example.ca',phone:null});
+offerings.answer('property-type','Condominium');offerings.answer('address','100 King Street');
+await offerings.submit();assert.equal(offerings.getSnapshot().retryPending,true);
+await offerings.submit();assert.equal(offerings.getSnapshot().receipt.receiptId,'receipt-1');
+console.log('Packed Offerings: lost-response retry passed.');
