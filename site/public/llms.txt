@@ -10,6 +10,7 @@ First identify consumer Offerings, Funnel qualification or Portal enrollment fro
 - [Offerings: consumer enquiries](https://franchiseai.github.io/website-integrations/offerings.md)
 - [Development workflow and agent tools](https://franchiseai.github.io/website-integrations/development.md)
 - [Connect a published funnel](https://franchiseai.github.io/website-integrations/going-live.md)
+- [Review Sites: comments on a hosted build](https://franchiseai.github.io/website-integrations/review-sites.md)
 - [Troubleshooting](https://franchiseai.github.io/website-integrations/troubleshooting.md)
 - [Maintaining and releasing](https://franchiseai.github.io/website-integrations/maintaining.md)
 

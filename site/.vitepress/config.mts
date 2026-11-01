@@ -37,6 +37,7 @@ export default defineConfig({
           { text: 'Portal brands · Prototype', link: '/portal' },
           { text: 'Offerings · Consumer enquiries', link: '/offerings' },
           { text: 'Going live', link: '/going-live' },
+          { text: 'Review Sites', link: '/review-sites' },
           { text: 'Troubleshooting', link: '/troubleshooting' },
         ],
       },
