@@ -582,13 +582,19 @@ The script does nothing on a host that does not end in `-review.fsaiagency.com`,
 
 ## 3. Add the link
 
-In the portal, open Admin, the brand, Kit, then Links.
+In the portal, open Admin, then Sites. Each brand has one card. Section 1, Site Preview, is what the brand sees before it pays. Section 2, Review Site, takes the links.
 
-| Part | Slot | Example |
+| Part | Row | Example |
 | --- | --- | --- |
-| Website | Staging | `https://katiroll-review.fsaiagency.com/` |
-| Lander, one page | Lander | `https://katiroll-review.fsaiagency.com/franchise` |
-| Lander, with markets | One slot per market | `https://katiroll-lander-review.fsaiagency.com/austin` |
+| Website | Website | `https://katiroll-review.fsaiagency.com/` |
+| Lander, one page | The lander's name | `https://katiroll-review.fsaiagency.com/franchise` |
+| Lander, with markets | One row per market (open the lander's row) | `https://katiroll-lander-review.fsaiagency.com/austin` |
+
+Save checks the page at once:
+
+- **Ready:** the page answers and loads the script tag.
+- **Script Tag Missing:** the page answers, but it does not load `review-site.js`. Add the tag, deploy, then press Check.
+- **Not Reachable:** the page does not answer. Check the DNS record and the Vercel domain.
 
 Each link is a full URL, so a lander can share the website's host or have its own. The longest link path that matches a page decides which part a comment goes to. A page that matches no link opens, but it takes no comments.
 
@@ -614,7 +620,7 @@ The lock is a sign-in check in the browser. The site's HTML and files still reac
 | What you see | Cause | Fix |
 | --- | --- | --- |
 | The page shows with no toolbar | The tag is missing or runs late, or the host does not end in `-review.fsaiagency.com` | Check the tag and the domain |
-| "This Review Is Not Connected" | No link in the portal has this host | Add the link in Admin |
+| "This Review Is Not Connected" | No link in the portal has this host | Add the link in Admin, Sites |
 | "No Access To This Review" | The account is not an active member of the brand, or the brand has not bought the part | Invite the person, or check the purchase |
 | "This page is not in this review" | The page's path matches no link | Add a link that covers the path |
 | "Sign In To Review" after signing in | The browser did not send the session | Open the site on its `fsaiagency.com` host, not a `vercel.app` URL |
