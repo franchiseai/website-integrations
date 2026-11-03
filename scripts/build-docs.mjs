@@ -12,6 +12,7 @@ const topics = [
   'development',
   'going-live',
   'review-sites',
+  'your-domain',
   'troubleshooting',
   'maintaining',
 ];

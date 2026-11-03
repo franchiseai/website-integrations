@@ -42,6 +42,10 @@ export default defineConfig({
         ],
       },
       {
+        text: 'FOR BRANDS',
+        items: [{ text: 'Your domain', link: '/your-domain' }],
+      },
+      {
         text: 'REFERENCE',
         items: [
           { text: 'OpenAPI reference ↗', link: '/api.html', target: '_self' },

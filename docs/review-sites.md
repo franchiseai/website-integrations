@@ -9,6 +9,7 @@ Comments go to the brand's review round in the portal, with the page, the spot a
 Each brand has its own repository and its own Vercel project.
 
 1. Create the project in the agency's Vercel team. Do not connect automatic production deploys. A build must stay still during a round, and nothing else keeps it still.
+   Set the framework preset to the site's framework, for example Next.js. With the preset Other, the deploy is Ready but every page answers 404.
 2. Add the domain `<brand>-review.fsaiagency.com` to the project. Use one label before `-review`, with no dots.
 3. Add a DNS record in the `fsaiagency.com` zone: `CNAME`, name `<brand>-review`, target `cname.vercel-dns.com`, DNS only (not proxied).
 4. Deploy only between rounds.
