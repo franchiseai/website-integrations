@@ -13,8 +13,9 @@ head:
 
 Stored prompts for the FS Ai Agency team. This page is not linked from the site. Do not share the link outside the team.
 
-| Prompt | Use it to |
+| Page | Use it to |
 | --- | --- |
+| [Admin guide: the first sales](./admin-guide) | Run the portal from a new brand to a paid order. |
 | [Brand media ZIP](./media-zip) | Build a brand's media folder as a ZIP for Admin, Media, Upload Folder. |
 | [Brand website](./website) | Build a brand's website as a static site ZIP for Admin, Sites. |
 
