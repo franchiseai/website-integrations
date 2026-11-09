@@ -1,4 +1,5 @@
 ---
+description: "Build a brand's website as a static site ZIP for Admin, Sites."
 search: false
 editLink: false
 prev: false

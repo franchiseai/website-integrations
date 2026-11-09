@@ -16,6 +16,25 @@ export default defineConfig({
       },
     ],
   ],
+  // Link previews (Slack, iMessage, LinkedIn): one site image, and each page's own title and description.
+  transformHead({ pageData, siteData }) {
+    const url = new URL(pageData.relativePath.replace(/(^|\/)index\.md$/, '$1').replace(/\.md$/, '.html'), 'https://franchiseai.github.io/website-integrations/').toString();
+    const title = pageData.title ? `${pageData.title} | ${siteData.title}` : siteData.title;
+    const description = pageData.frontmatter.description || pageData.description || siteData.description;
+    const image = 'https://franchiseai.github.io/website-integrations/og.png';
+    return [
+      ['meta', { property: 'og:type', content: 'website' }],
+      ['meta', { property: 'og:site_name', content: siteData.title }],
+      ['meta', { property: 'og:title', content: title }],
+      ['meta', { property: 'og:description', content: description }],
+      ['meta', { property: 'og:url', content: url }],
+      ['meta', { property: 'og:image', content: image }],
+      ['meta', { property: 'og:image:width', content: '1200' }],
+      ['meta', { property: 'og:image:height', content: '630' }],
+      ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+      ['meta', { name: 'twitter:image', content: image }],
+    ];
+  },
   themeConfig: {
     logo: '/logo.svg',
     siteTitle: 'FS Ai Agency',

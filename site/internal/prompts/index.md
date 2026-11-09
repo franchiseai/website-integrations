@@ -1,4 +1,5 @@
 ---
+description: "Stored prompts and guides for the FS Ai Agency team."
 search: false
 editLink: false
 prev: false

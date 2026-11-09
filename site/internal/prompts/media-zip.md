@@ -1,4 +1,5 @@
 ---
+description: "Build a brand's media folder as a ZIP for Admin, Media."
 search: false
 editLink: false
 prev: false
