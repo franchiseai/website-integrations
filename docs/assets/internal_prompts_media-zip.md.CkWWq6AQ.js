@@ -1,0 +1,19 @@
+import{_ as s,o as e,c as n,ag as t}from"./chunks/framework.7BZpJk9v.js";const m=JSON.parse('{"title":"Prompt: brand media ZIP","description":"","frontmatter":{"search":false,"editLink":false,"prev":false,"next":false,"head":[["meta",{"name":"robots","content":"noindex, nofollow"}]]},"headers":[],"relativePath":"internal/prompts/media-zip.md","filePath":"internal/prompts/media-zip.md"}'),i={name:"internal/prompts/media-zip.md"};function p(l,a,o,r,d,c){return e(),n("div",null,[...a[0]||(a[0]=[t(`<h1 id="prompt-brand-media-zip" tabindex="-1">Prompt: brand media ZIP <a class="header-anchor" href="#prompt-brand-media-zip" aria-label="Permalink to &quot;Prompt: brand media ZIP&quot;">​</a></h1><p>Give this prompt to the agent that prepares the brand&#39;s media. Replace <code>&lt;Brand Name&gt;</code> and <code>&lt;slug&gt;</code> first. The slug must be the brand&#39;s slug in the portal.</p><div class="language-text vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">text</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>Build the media ZIP for the brand &lt;Brand Name&gt;, portal slug &lt;slug&gt;, for upload in the FS Ai Agency portal (Admin, Media, Upload Folder).</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Use katiroll/ in the repo franchiseai/fsai-agency-portal-media as the model. Copy its folder layout, its manifest.json shape, its article JSON format and its social/&lt;set&gt;/plan.json format.</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Rules. The portal refuses the upload if any of these fail:</span></span>
+<span class="line"><span>- manifest.json is at the top of the ZIP. brand.slug is exactly &lt;slug&gt;, and brand.logo points to a file in the ZIP.</span></span>
+<span class="line"><span>- Every file, data.cover and meta path in the manifest is a relative path to a file in the ZIP.</span></span>
+<span class="line"><span>- Part kind is one of: website, lander, decks, ads, articles, images, social, ops-decks, lms. Each part key is unique.</span></span>
+<span class="line"><span>- Asset kind is one of: slide, video, image, article, page.</span></span>
+<span class="line"><span>- File and folder names use only letters, digits, &quot;.&quot;, &quot;-&quot; and &quot;_&quot;. A name does not start with &quot;.&quot; or &quot;-&quot;. No spaces.</span></span>
+<span class="line"><span>- Images are png, jpg, webp or svg. Videos are mp4, webm or mov. Each file is 500 MB or less, and the ZIP holds at most 20,000 files. manifest.json is under 4 MB.</span></span>
+<span class="line"><span>- Do not include a site/ folder. The website goes up separately.</span></span>
+<span class="line"><span>- Leave out list_price, min_offer and floor on parts. Copy the packages block from katiroll as it is.</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Before you zip, check that every path in the manifest exists. If you have the portal repo, run:</span></span>
+<span class="line"><span>  npm run media:publish -- &lt;folder&gt; --brand &lt;slug&gt; --dry-run</span></span>
+<span class="line"><span>It prints every problem and changes nothing.</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Then give me the ZIP and a list of the parts and the number of assets in each.</span></span></code></pre></div><h2 id="upload" tabindex="-1">Upload <a class="header-anchor" href="#upload" aria-label="Permalink to &quot;Upload&quot;">​</a></h2><ol><li>The brand must exist in Admin, Clients.</li><li>Go to Admin, Media, the brand, <strong>Upload Folder</strong>. Drop the ZIP.</li><li>The portal checks the manifest and every path before it uploads. Fix what it lists, then upload again.</li></ol>`,5)])])}const u=s(i,[["render",p]]);export{m as __pageData,u as default};
